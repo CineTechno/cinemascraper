@@ -31,7 +31,7 @@ public class ScraperMuranow extends Scraper {
         return website.select(dateSelector + "," + titleSelector);
     }
 
-    public void getFilms()  {
+    public List<FilmModel> getFilms()  {
         String currentDate="";
         String date = "";
         Elements movieElements = null;
@@ -57,11 +57,12 @@ public class ScraperMuranow extends Scraper {
 
                     FilmModel film = new FilmModel("Muranow", title, date, showtime);
 
-                    film.addFilmToDB();
+                    tempListOfFilms.add(film);
                 }
             }
 
         }
+        return tempListOfFilms;
     }
 
 

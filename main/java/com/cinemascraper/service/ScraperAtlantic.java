@@ -1,5 +1,6 @@
 package com.cinemascraper.service;
 
+import com.cinemascraper.filmRepository.FilmRepository;
 import com.cinemascraper.model.FilmModel;
 import com.cinemascraper.utils.VerifyUtils;
 import org.jsoup.Jsoup;
@@ -32,10 +33,10 @@ public class ScraperAtlantic extends Scraper {
     }
 
 
-    public void fetchAndParse() throws IOException {
+    public List<FilmModel> fetchAndParse() throws IOException {
 
         LocalDate today;
-        Map<String, List<String>> mapOfFilms = new LinkedHashMap<>();
+
 
 
         for (int i = 0; i < 7; i++) {
@@ -47,23 +48,19 @@ public class ScraperAtlantic extends Scraper {
             Elements movies = doc.select("tr.repertoire-movie-tr");
             for(Element movie : movies) {
                 Map<String, List<String>> titleShowtimes = new LinkedHashMap<>();
-                String film = doc.select(titleSelector).text();
-                List<String> showTime = doc.select(showTimeSelector).eachText();
+                String film = movie.select(titleSelector).text();
+                List<String> showTime = movie.select(showTimeSelector).eachText();
                 titleShowtimes.put(film, showTime);
                 logger.info("Films: {}", showTime);
                 for(Map.Entry<String, List<String>> entry : titleShowtimes.entrySet()) {
                     String title = entry.getKey();
                     List<String> showTimes = entry.getValue();
                     FilmModel filmModel = new FilmModel("Atlantic",title, String.valueOf(today), showTimes);
-                    filmModel.addFilmToDB();
+                    tempListOfFilms.add(filmModel);
                 }
-
             }
-
-
-
         }
-
+        return tempListOfFilms;
     }
 
 }

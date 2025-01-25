@@ -2,13 +2,11 @@ package com.cinemascraper.model;
 
 import java.util.*;
 
-import static com.cinemascraper.service.Scraper.filmList;
-
 public class FilmModel {
 
     String cinema;
     String title;
-    String date;
+    List<String> date;
     List<String> showTime;
     Map<String, List<String>> dateShowTime;
 
@@ -19,7 +17,7 @@ public class FilmModel {
     public FilmModel(String cinema, String title, String date, List<String> showTime) {
         this.cinema = cinema;
         this.title = title;
-        this.date = date;
+        this.date = new ArrayList<>(List.of(date));
         this.showTime = new ArrayList<>(showTime);  // Ensure internal consistency
         this.dateShowTime = new LinkedHashMap<>();
         this.dateShowTime.put(date, new ArrayList<>(showTime));
@@ -33,7 +31,11 @@ public class FilmModel {
         return title;
     }
 
-    public String getDate() {
+    public List<String> getShowTime() {
+        return showTime;
+    }
+
+    public List<String> getDate() {
         return date;
     }
 
@@ -59,18 +61,22 @@ public class FilmModel {
         return null;
     }
 
-    public void addFilmToDB() {
-        FilmModel existingFilm = findFilmByTitle(this.title, filmList);
-
-        if (existingFilm != null) {
-            existingFilm.dateShowTime.merge(this.date, new ArrayList<>(showTime), (existingList, newList) -> {
-                if (!existingList.contains(this.showTime)) {
-                    existingList.addAll(this.showTime);
-                }
-                return existingList;
-            });
-        } else {
-            filmList.add(this);
-        }
-    }
+//    public void addFilmToDB() {
+//        FilmModel existingFilm = findFilmByTitle(this.title, filmList);
+//        String flattenedDate = this.date.getFirst();
+//
+//        if (existingFilm != null) {
+//            if(!existingFilm.getDate().contains(flattenedDate)) {
+//                existingFilm.getDate().add(flattenedDate);
+//            }
+//            existingFilm.dateShowTime.merge(flattenedDate, new ArrayList<>(showTime), (existingList, newList) -> {
+//                if (!existingList.contains(this.showTime)) {
+//                    existingList.addAll((this.showTime));
+//                }
+//                return existingList;
+//            });
+//        } else {
+//            filmList.add(this);
+//        }
+//    }
 }
