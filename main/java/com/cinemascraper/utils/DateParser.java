@@ -30,38 +30,8 @@ public class DateParser {
         String monthName = polishDate.replaceAll("^[a-zA-Ząćęłńóśźż]+", "").replaceAll("\\d", "");
         String month = monthMap.get(monthName);
 
-        String formattedDate = String.format("%s-%s-2025", day, month );
-        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
 
-
-
-        return formattedDate;
-    }
-
-
-    public static String parseDateAtlantic(String rawDate) {
-        // Append the default year
-        String fullDate = rawDate + ".2025";
-
-        // Define the formatter for parsing the full Polish date
-        DateTimeFormatter inputFormatter = new DateTimeFormatterBuilder()
-                .parseCaseInsensitive()
-                .appendPattern("EEEE d.MM.yyyy") // Expect weekday + day + month + year
-                .toFormatter(Locale.forLanguageTag("pl-PL")); // Correctly handles Polish
-
-        // Parse the input string into a LocalDate
-        LocalDate date;
-        try {
-            date = LocalDate.parse(fullDate, inputFormatter);
-        } catch (Exception e) {
-            throw new IllegalArgumentException("Error parsing date: " + rawDate, e);
-        }
-
-        // Define the output formatter to convert to DD-MM-YYYY
-        DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-
-        // Format the date into the desired output format
-        return date.format(outputFormatter);
+        return String.format("2025-%s-%s", month, day );
     }
 
 

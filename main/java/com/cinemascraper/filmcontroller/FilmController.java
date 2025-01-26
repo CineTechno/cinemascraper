@@ -35,7 +35,7 @@ public class FilmController {
     }
     @GetMapping("/")
 
-    public List<FilmModel> scrapeAll (){
+    public void scrapeAll (){
 
 
         try {
@@ -54,7 +54,7 @@ public class FilmController {
 
 
 
-        return  filmRepository.getFilmRepository();
+        filmRepository.addFilmToDB(filmRepository.getFilmRepository());
 
     }
 

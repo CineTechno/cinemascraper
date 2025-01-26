@@ -13,10 +13,17 @@ import org.jsoup.select.Elements;
 
 import java.io.IOException;
 import java.text.ParseException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @Service
 public class ScraperMuranow extends Scraper {
+
+    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+
     public ScraperMuranow(
             @Value("${scraper.muranow.date-selector}") String dateSelector,
             @Value("${scraper.muranow.title-selector}") String titleSelector,
@@ -33,7 +40,7 @@ public class ScraperMuranow extends Scraper {
 
     public List<FilmModel> getFilms()  {
         String currentDate="";
-        String date = "";
+        LocalDateTime dateShowTime;
         Elements movieElements = null;
         try {
             movieElements = fetchAndParse();
@@ -46,16 +53,17 @@ public class ScraperMuranow extends Scraper {
                 if(spans.size() >= 3) {
                     currentDate = spans.get(0).text() + spans.get(1).text() + spans.get(2).text();
                 }
-                date = DateParser.parseDateMuranow(currentDate);
+
 
             }
 
             else if (element.is(titleSelector)) {
                 String title = element.text().replaceAll("\\d", "").trim();
                 String showtime = element.text().replaceAll("[^0-9:]", "").trim();
+                dateShowTime = dateShowTimeFormatter(currentDate, showtime);
                 if (!currentDate.isEmpty()) {
 
-                    FilmModel film = new FilmModel("Muranow", title, date, showtime);
+                    FilmModel film = new FilmModel("Muranow", title, dateShowTime);
 
                     tempListOfFilms.add(film);
                 }
@@ -66,7 +74,11 @@ public class ScraperMuranow extends Scraper {
     }
 
 
-
+    public LocalDateTime dateShowTimeFormatter(String date, String showtime){
+        String formattedDate = DateParser.parseDateMuranow(date);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        return LocalDateTime.parse(formattedDate + " " + showtime, formatter);
+    }
 
 
 

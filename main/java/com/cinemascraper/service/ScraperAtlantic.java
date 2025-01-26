@@ -10,9 +10,12 @@ import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
 import java.time.LocalDate;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 import org.slf4j.Logger;
@@ -22,7 +25,7 @@ import org.slf4j.LoggerFactory;
 @Service
 public class ScraperAtlantic extends Scraper {
 
-    private static final Logger logger = LoggerFactory.getLogger(ScraperAtlantic.class);
+    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
     public ScraperAtlantic(
             @Value("${scraper.atlantic.date-selector}") String dateSelector,
@@ -41,21 +44,19 @@ public class ScraperAtlantic extends Scraper {
 
         for (int i = 0; i < 7; i++) {
             today = LocalDate.now().plusDays(i);
-
             String dailyURL = url + today;
             System.out.println(dailyURL);
             Document doc = Jsoup.connect(dailyURL).timeout(2000).get();
             Elements movies = doc.select("tr.repertoire-movie-tr");
+
             for(Element movie : movies) {
-                Map<String, List<String>> titleShowtimes = new LinkedHashMap<>();
-                String film = movie.select(titleSelector).text();
+                String title = movie.select(titleSelector).text();
                 List<String> showTime = movie.select(showTimeSelector).eachText();
-                titleShowtimes.put(film, showTime);
-                logger.info("Films: {}", showTime);
-                for(Map.Entry<String, List<String>> entry : titleShowtimes.entrySet()) {
-                    String title = entry.getKey();
-                    List<String> showTimes = entry.getValue();
-                    FilmModel filmModel = new FilmModel("Atlantic",title, String.valueOf(today), showTimes);
+                List<LocalDateTime> dateShowTime = new ArrayList<>();
+                for(String time : showTime) {
+                    LocalDateTime dateTime = LocalDateTime.parse(today + " " + time, formatter);
+                    dateShowTime.add(dateTime);
+                    FilmModel filmModel = new FilmModel("Atlantic",title, dateShowTime);
                     tempListOfFilms.add(filmModel);
                 }
             }
