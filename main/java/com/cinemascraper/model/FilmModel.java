@@ -16,7 +16,7 @@ public class FilmModel {
     public FilmModel(String cinema, String title, List<LocalDateTime> dateShowTime) {
         this.cinema = cinema;
         this.title = title;
-        this.dateShowTime = dateShowTime;
+        this.dateShowTime = new ArrayList<>(dateShowTime);
     }
 
     public String getCinema() {
@@ -42,5 +42,14 @@ public class FilmModel {
             }
         }
         return null;
+    }
+
+    @Override
+    public String toString() {
+        return "FilmModel{" +
+                "cinema='" + cinema + '\'' +
+                ", title='" + title + '\'' +
+                ", dateShowTime=" + dateShowTime +
+                '}';
     }
 }

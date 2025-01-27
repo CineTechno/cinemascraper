@@ -1,7 +1,11 @@
 package com.cinemascraper.service;
 
+import ch.qos.logback.classic.spi.ILoggingEvent;
 import com.cinemascraper.model.FilmModel;
 import com.cinemascraper.utils.VerifyUtils;
+import org.slf4j.ILoggerFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import com.cinemascraper.utils.DateParser;
@@ -23,10 +27,11 @@ import java.util.*;
 public class ScraperMuranow extends Scraper {
 
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-
+    Logger logger = LoggerFactory.getLogger(ScraperMuranow.class);
     public ScraperMuranow(
             @Value("${scraper.muranow.date-selector}") String dateSelector,
             @Value("${scraper.muranow.title-selector}") String titleSelector,
+
             @Value("${scraper.muranow.url}") String url){
         super(dateSelector, titleSelector, url);
     }
@@ -58,7 +63,7 @@ public class ScraperMuranow extends Scraper {
             }
 
             else if (element.is(titleSelector)) {
-                String title = element.text().replaceAll("\\d", "").trim();
+                String title = element.text().replaceAll("\\d|:|– zestaw", "").trim();
                 String showtime = element.text().replaceAll("[^0-9:]", "").trim();
                 dateShowTime = dateShowTimeFormatter(currentDate, showtime);
                 if (!currentDate.isEmpty()) {

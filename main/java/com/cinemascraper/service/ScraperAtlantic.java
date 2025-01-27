@@ -50,7 +50,7 @@ public class ScraperAtlantic extends Scraper {
             Elements movies = doc.select("tr.repertoire-movie-tr");
 
             for(Element movie : movies) {
-                String title = movie.select(titleSelector).text();
+                String title = titleProcessing(movie.select(titleSelector).text());
                 List<String> showTime = movie.select(showTimeSelector).eachText();
                 List<LocalDateTime> dateShowTime = new ArrayList<>();
                 for(String time : showTime) {
@@ -64,7 +64,12 @@ public class ScraperAtlantic extends Scraper {
         return tempListOfFilms;
     }
 
+    public String titleProcessing(String rawTitle) {
+        var processedText = rawTitle.replaceAll("- napisy|- przedpremiera|Kino dla Ciebie – Kobiece wieczory w Atlanticu:|– napisy ENG/PL| Pora dla Seniora:|- zestaw|\\(wersja z napisami\\)", "");
+        return processedText.trim();
+    }
 }
+
 
 
 
