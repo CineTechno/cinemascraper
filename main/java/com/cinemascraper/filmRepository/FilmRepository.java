@@ -34,8 +34,8 @@ public class FilmRepository {
 
         if (filmId == null) {
             // Step 2: Insert the film if it doesn't exist
-            jdbcClient.sql("INSERT INTO films (cinema, title) VALUES (?, ?)")
-                    .params(film.getCinema(), film.getTitle())
+            jdbcClient.sql("INSERT INTO films (cinema, title, description) VALUES (?, ?, ?)")
+                    .params(film.getCinema(), film.getTitle(), film.getDescription())
                     .update();
 
             // Retrieve the newly inserted film's ID
@@ -45,37 +45,12 @@ public class FilmRepository {
                     .single();
         }
 
-        // Step 3: Insert all the showtimes for the film
+
         var sql = "INSERT INTO showtimes (film_id, show_datetime) VALUES (?, ?)";
         for (LocalDateTime dateTime : film.getDateShowTime()) {
             jdbcClient.sql(sql)
                     .params(filmId, Timestamp.valueOf(dateTime))
                     .update();
-        }
-    }
-
-    public List<FilmModel> getFilmRepository() {
-        return filmRepository;
-    }
-
-    public FilmModel findFilmByTitle(String title, String cinema) {
-       return filmRepository.stream()
-                .filter(filmModel -> filmModel.getTitle().equals(title) && filmModel.getCinema().equals(cinema))
-               .findFirst().
-                orElse(null);
-    }
-
-    public void addFilmToDB(List<FilmModel> filmList){
-        filmList.forEach(this::create);
-    }
-
-    public void addToFilmRepository(FilmModel film) {
-        FilmModel existingFilm = findFilmByTitle(film.getTitle(), film.getCinema());
-
-        if (existingFilm != null) {
-            existingFilm.setDateShowTime(film.getDateShowTime());
-        } else  {
-            filmRepository.add(film);
         }
     }
     }

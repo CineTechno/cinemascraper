@@ -24,8 +24,8 @@ public abstract class Scraper {
 
     }
 
-
-
-}
+        abstract public List<FilmModel> getFilms ();
+        abstract public String getDescription (String title);
+    }
 
 

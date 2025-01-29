@@ -1,8 +1,8 @@
 CREATE TABLE IF NOT EXISTS films (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    cinema VARCHAR(255) NOT NULL,
+    cinema VARCHAR(255),
     title VARCHAR(255) NOT NULL,
-    UNIQUE (cinema, title)
+    description VARCHAR(2000)
     );
 
 CREATE TABLE IF NOT EXISTS showtimes (

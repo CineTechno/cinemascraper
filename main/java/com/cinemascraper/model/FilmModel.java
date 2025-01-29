@@ -8,14 +8,16 @@ public class FilmModel {
     String cinema;
     String title;
     List<LocalDateTime> dateShowTime;
+    String description;
 
-    public FilmModel(String cinema, String title, LocalDateTime dateShowTime) {
-        this(cinema, title, List.of (dateShowTime));
+    public FilmModel(String cinema, String title, String description, LocalDateTime dateShowTime) {
+        this(cinema, title,description, List.of (dateShowTime));
     }
 
-    public FilmModel(String cinema, String title, List<LocalDateTime> dateShowTime) {
+    public FilmModel(String cinema, String title,String description, List<LocalDateTime> dateShowTime) {
         this.cinema = cinema;
         this.title = title;
+        this.description = description;
         this.dateShowTime = new ArrayList<>(dateShowTime);
     }
 
@@ -27,21 +29,17 @@ public class FilmModel {
         return title;
     }
 
+
+    public String getDescription() {
+        return description;
+    }
+
     public List<LocalDateTime> getDateShowTime() {
         return dateShowTime;
     }
+
     public void setDateShowTime(List<LocalDateTime> DateShowTimes) {
         dateShowTime.addAll(DateShowTimes);
-    }
-
-
-    private static FilmModel findFilmByTitle(String title, List<FilmModel> films) {
-        for (FilmModel film : films) {
-            if (Objects.equals(film.getTitle(), title)) {
-                return film;
-            }
-        }
-        return null;
     }
 
     @Override

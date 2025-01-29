@@ -43,6 +43,8 @@ public class ScraperMuranow extends Scraper {
         return website.select(dateSelector + "," + titleSelector);
     }
 
+
+    @Override
     public List<FilmModel> getFilms()  {
         String currentDate="";
         LocalDateTime dateShowTime;
@@ -66,9 +68,10 @@ public class ScraperMuranow extends Scraper {
                 String title = element.text().replaceAll("\\d|:|– zestaw", "").trim();
                 String showtime = element.text().replaceAll("[^0-9:]", "").trim();
                 dateShowTime = dateShowTimeFormatter(currentDate, showtime);
+                String description = getDescription(title);
                 if (!currentDate.isEmpty()) {
 
-                    FilmModel film = new FilmModel("Muranow", title, dateShowTime);
+                    FilmModel film = new FilmModel("Muranow", title, description, dateShowTime);
 
                     tempListOfFilms.add(film);
                 }
@@ -76,6 +79,18 @@ public class ScraperMuranow extends Scraper {
 
         }
         return tempListOfFilms;
+    }
+
+    @Override
+    public String getDescription(String title) {
+        String processedTitle = title.replaceAll("[.!-]", "").replaceAll(" ", "-");
+        try {
+            Document website = Jsoup.connect("https://kinomuranow.pl/film/" + processedTitle).get();
+            return Objects.requireNonNull(website.select("div.node__summary").first()).text();
+        }catch(IOException e){
+
+        }
+        return "" ;
     }
 
 
