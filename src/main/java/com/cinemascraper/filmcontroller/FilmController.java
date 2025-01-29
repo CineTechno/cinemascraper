@@ -1,56 +1,45 @@
 package com.cinemascraper.filmcontroller;
-
-
-import com.cinemascraper.model.FilmModel;
-import com.cinemascraper.service.ScraperAtlantic;
-import org.springframework.web.bind.annotation.RequestMapping;
-
-import com.cinemascraper.service.ScraperMuranow;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.cinemascraper.service.OMDbAPI;
+import com.cinemascraper.service.ScraperService;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.text.ParseException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.Objects;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:5174")
-@RequestMapping("/")
+@RequestMapping("/api")
 public class FilmController {
-
-    private final ScraperMuranow scraperMuranow;
-    private final ScraperAtlantic scraperAtlantic;
-
-    public FilmController(ScraperMuranow scraperMuranow, ScraperAtlantic scraperAtlantic) {
-        this.scraperMuranow = scraperMuranow;
-        this.scraperAtlantic = scraperAtlantic;
-
+    private final OMDbAPI oMDbApi;
+    private final Logger logger = LoggerFactory.getLogger(FilmController.class);
+    private final ScraperService scraperService;
+    public FilmController(ScraperService scraperService, OMDbAPI oMDbApi) {
+        this.oMDbApi = oMDbApi;
+        this.scraperService = scraperService;
     }
-    @GetMapping("/")
+    @GetMapping("/scrape")
 
-    public List<FilmModel> scrapeAll (){
-        try {
-            scraperMuranow.fetchAndParse();
-            scraperMuranow.getFilms();
-        } catch (Exception e) {
-            System.out.println(e);
-        }
-        try {
-            scraperAtlantic.fetchAndParse();
-        }catch (Exception e) {
-           e.printStackTrace();
-        }
-        return  scraperMuranow.getFilmList();
-
+    public ResponseEntity<String> scrapeTitlesShowtimes() {
+        return scraperService.scrapeAll();
     }
 
-
+    @GetMapping("/movie")
+    public String getDetails(@RequestParam String title) {
+        return oMDbApi.getMovieDetails(title);
+    }
 
 
 
 
 }
+
+
+
+
+
 

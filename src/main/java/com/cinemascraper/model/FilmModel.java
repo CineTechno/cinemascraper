@@ -1,28 +1,24 @@
 package com.cinemascraper.model;
 
+import java.time.LocalDateTime;
 import java.util.*;
-
-import static com.cinemascraper.service.Scraper.filmList;
 
 public class FilmModel {
 
     String cinema;
     String title;
-    String date;
-    List<String> showTime;
-    Map<String, List<String>> dateShowTime;
+    List<LocalDateTime> dateShowTime;
+    String description;
 
-    public FilmModel(String cinema, String title, String date, String showTime) {
-        this(cinema, title, date, new ArrayList<>(List.of(showTime)));
+    public FilmModel(String cinema, String title, String description, LocalDateTime dateShowTime) {
+        this(cinema, title,description, List.of (dateShowTime));
     }
 
-    public FilmModel(String cinema, String title, String date, List<String> showTime) {
+    public FilmModel(String cinema, String title,String description, List<LocalDateTime> dateShowTime) {
         this.cinema = cinema;
         this.title = title;
-        this.date = date;
-        this.showTime = new ArrayList<>(showTime);  // Ensure internal consistency
-        this.dateShowTime = new LinkedHashMap<>();
-        this.dateShowTime.put(date, new ArrayList<>(showTime));
+        this.description = description;
+        this.dateShowTime = new ArrayList<>(dateShowTime);
     }
 
     public String getCinema() {
@@ -33,44 +29,25 @@ public class FilmModel {
         return title;
     }
 
-    public String getDate() {
-        return date;
+
+    public String getDescription() {
+        return description;
     }
 
-    public void setCinema(String cinema) {
-        this.cinema = cinema;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-
-    public Map<String, List<String>> getDateShowTime() {
+    public List<LocalDateTime> getDateShowTime() {
         return dateShowTime;
     }
 
-    private static FilmModel findFilmByTitle(String title, List<FilmModel> films) {
-        for (FilmModel film : films) {
-            if (Objects.equals(film.getTitle(), title)) {
-                return film;
-            }
-        }
-        return null;
+    public void setDateShowTime(List<LocalDateTime> DateShowTimes) {
+        dateShowTime.addAll(DateShowTimes);
     }
 
-    public void addFilmToDB() {
-        FilmModel existingFilm = findFilmByTitle(this.title, filmList);
-
-        if (existingFilm != null) {
-            existingFilm.dateShowTime.merge(this.date, new ArrayList<>(showTime), (existingList, newList) -> {
-                if (!existingList.contains(this.showTime)) {
-                    existingList.addAll(this.showTime);
-                }
-                return existingList;
-            });
-        } else {
-            filmList.add(this);
-        }
+    @Override
+    public String toString() {
+        return "FilmModel{" +
+                "cinema='" + cinema + '\'' +
+                ", title='" + title + '\'' +
+                ", dateShowTime=" + dateShowTime +
+                '}';
     }
 }
