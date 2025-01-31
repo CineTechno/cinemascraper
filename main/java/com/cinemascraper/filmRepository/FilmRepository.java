@@ -17,13 +17,11 @@ import java.util.Optional;
 
 @Repository
 public class FilmRepository {
-    private List<FilmModel> filmRepository = new ArrayList<FilmModel>();
     private final JdbcClient jdbcClient;
     public FilmRepository(JdbcClient jdbcClient) {
         this.jdbcClient = jdbcClient;
 
     }
-
 
     public void create(FilmModel film){
         Integer filmId = jdbcClient.sql("SELECT id FROM films WHERE cinema = ? AND title = ?")
@@ -53,6 +51,20 @@ public class FilmRepository {
                     .update();
         }
     }
+
+    public List<String> getFilmTitles(){
+        return jdbcClient.sql("SELECT title FROM films")
+                .query(String.class)
+                .list();
+    }
+
+    public void addRatingAndImages(String title, String imgPath, String rating){
+    JdbcClient.sql("INSERT INTO films id FROM films WHERE title = title").
+            query(String.class)
+            .
+    }
+
+    public void
     }
 
 

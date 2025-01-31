@@ -1,10 +1,13 @@
 package com.cinemascraper.model;
 
+import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Table;
+
 import java.time.LocalDateTime;
 import java.util.*;
 
 public class FilmModel {
-
+    private Integer id;
     String cinema;
     String title;
     List<LocalDateTime> dateShowTime;

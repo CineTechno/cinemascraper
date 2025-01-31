@@ -1,26 +1,27 @@
 package com.cinemascraper.filmcontroller;
-import com.cinemascraper.service.OMDbAPI;
+import com.cinemascraper.filmRepository.FilmRepository;
+import com.cinemascraper.model.TMDBMovie;
 import com.cinemascraper.service.ScraperService;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
+import com.cinemascraper.service.TMDBMovieService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.IOException;
-import java.util.Objects;
+import java.util.List;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:5174")
 @RequestMapping("/api")
 public class FilmController {
-    private final OMDbAPI oMDbApi;
+    private final TMDBMovieService TMDB;
     private final Logger logger = LoggerFactory.getLogger(FilmController.class);
     private final ScraperService scraperService;
-    public FilmController(ScraperService scraperService, OMDbAPI oMDbApi) {
-        this.oMDbApi = oMDbApi;
+    private final FilmRepository filmRepository;
+    public FilmController(ScraperService scraperService, TMDBMovieService TMDB, FilmRepository filmRepository) {
+        this.TMDB = TMDB;
         this.scraperService = scraperService;
+        this.filmRepository = filmRepository;
     }
     @GetMapping("/scrape")
 
@@ -28,10 +29,19 @@ public class FilmController {
         return scraperService.scrapeAll();
     }
 
-    @GetMapping("/movie")
-    public String getDetails(@RequestParam String title) {
-        return oMDbApi.getMovieDetails(title);
+
+    @GetMapping("/details")
+    public void addRatingAndImagesToDB() {
+        List<String> titlesFromDB = filmRepository.getFilmTitles();
+        List<>
+
     }
+
+    @GetMapping("/downlaodimages")
+    public void downloadImages(@RequestParam String title) {
+
+    }
+
 
 
 
