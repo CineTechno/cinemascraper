@@ -1,6 +1,8 @@
 package com.cinemascraper.filmRepository;
 
+import com.cinemascraper.model.FilmImage;
 import com.cinemascraper.model.FilmModel;
+import com.cinemascraper.model.TMDBMovie;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.simple.JdbcClient;
@@ -17,42 +19,66 @@ import java.util.Optional;
 
 @Repository
 public class FilmRepository {
-    private List<FilmModel> filmRepository = new ArrayList<FilmModel>();
     private final JdbcClient jdbcClient;
+
     public FilmRepository(JdbcClient jdbcClient) {
         this.jdbcClient = jdbcClient;
 
     }
 
-
-    public void create(FilmModel film){
-        Integer filmId = jdbcClient.sql("SELECT id FROM films WHERE cinema = ? AND title = ?")
-                .params(film.getCinema(), film.getTitle())
+    public void create(FilmModel film) {
+        var filmID = jdbcClient.sql("INSERT INTO films (title, description, director, release_year, img_path) VALUES (?,?,?,?,?) " +
+                        "ON CONFLICT (title) DO UPDATE SET description = EXCLUDED.description, " +
+                        "director = EXCLUDED.director, " +
+                        "release_year = EXCLUDED.release_year, " +
+                        "img_path = EXCLUDED.img_path " +
+                        "RETURNING id")
+                .params(film.getTitle(), film.getDescription(),film.getDirector(),film.getYear(),film.getImgPath())
                 .query(Integer.class)
-                .optional()
-                .orElse(null);
+                .single();
 
-        if (filmId == null) {
-            // Step 2: Insert the film if it doesn't exist
-            jdbcClient.sql("INSERT INTO films (cinema, title, description) VALUES (?, ?, ?)")
-                    .params(film.getCinema(), film.getTitle(), film.getDescription())
-                    .update();
+        var cinemaID = jdbcClient.sql("INSERT INTO cinemas (name) VALUES (?) " +
+                        "ON CONFLICT (name) DO UPDATE SET name = EXCLUDED.name " +
+                        "RETURNING id")
+                .params(film.getCinema())
+                .query(Integer.class)
+                .single();
 
-            // Retrieve the newly inserted film's ID
-            filmId = jdbcClient.sql("SELECT id FROM films WHERE cinema = ? AND title = ?")
-                    .params(film.getCinema(), film.getTitle())
-                    .query(Integer.class)
-                    .single();
-        }
+        jdbcClient.sql("INSERT INTO title_cinema (film_id, cinema_id) VALUES (?, ?) " +
+                        "ON CONFLICT (film_id, cinema_id) DO NOTHING")
+                .params(filmID, cinemaID)
+                .update();
 
-
-        var sql = "INSERT INTO showtimes (film_id, show_datetime) VALUES (?, ?)";
-        for (LocalDateTime dateTime : film.getDateShowTime()) {
-            jdbcClient.sql(sql)
-                    .params(filmId, Timestamp.valueOf(dateTime))
+        for (LocalDateTime dateTime:film.getDateShowTime()) {
+            jdbcClient.sql("INSERT INTO showtimes (film_id, cinema_id, show_datetime) VALUES (?, ?, ?)")
+                    .params(filmID, cinemaID, Timestamp.valueOf(dateTime))
                     .update();
         }
     }
+
+    public void addRating(List<TMDBMovie> tmdbMovieList) {
+        for (TMDBMovie tmdbMovie : tmdbMovieList) {
+            jdbcClient.sql("UPDATE films SET rating=? WHERE title = ?")
+                    .params(tmdbMovie.getVoteAverage(), tmdbMovie.getTitle())
+                    .update();
+        }
     }
+
+    public List<FilmImage> getImgPaths(){
+        return jdbcClient.sql("SELECT title, img_path FROM films")
+                .query((rs,row) -> new FilmImage(rs.getString("title"),rs.getString("img_path")))
+                .list();
+    }
+
+
+
+    public List<String> getTitlesFromDB(){
+        List<String> titles = jdbcClient.sql("SELECT title FROM films")
+                .query(String.class)
+                .list();
+        return titles;
+    }
+}
+
 
 
