@@ -16,6 +16,8 @@ public class FilmModel {
     String year;
     String imgPath;
 
+    public FilmModel() {}
+
     public FilmModel(String cinema, String title, String description, String director, String year, String imgPath, LocalDateTime dateShowTime) {
         this(cinema, title, description, director, year, imgPath, List.of(dateShowTime));
     }
@@ -29,6 +31,7 @@ public class FilmModel {
         this.imgPath = imgPath;
         this.dateShowTime = new ArrayList<>(dateShowTime);
     }
+
 
     public String getCinema() {
         return cinema;

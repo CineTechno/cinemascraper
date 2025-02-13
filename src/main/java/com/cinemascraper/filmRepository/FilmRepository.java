@@ -78,6 +78,18 @@ public class FilmRepository {
                 .list();
         return titles;
     }
+
+    public List<FilmModel> getFilmsFromCinema(String cinema){
+
+        return jdbcClient.sql("SELECT f.id,f.title,f.description,f.director,f.release_year AS releaseYear " +
+                "FROM films f " +
+                "JOIN title_cinema t ON f.id = t.film_id " +
+                "JOIN cinemas c ON t.cinema_id = c.id " +
+                "WHERE c.name = ?")
+                .params(cinema)
+                .query(FilmModel.class)
+                .list();
+    }
 }
 
 

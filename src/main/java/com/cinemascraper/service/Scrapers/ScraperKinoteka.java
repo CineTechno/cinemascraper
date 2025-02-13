@@ -50,7 +50,7 @@ public class ScraperKinoteka extends Scraper {
                         String showtime = showtimeElement.text();
                         LocalDateTime dateShowTime = dateShowTimeFormatter(date, showtime);
 
-                        Map<String, String> filmDetails = getFilmDetails(filmUrl); // Passing film URL instead of just title.
+                        Map<String, String> filmDetails = getFilmDetails(filmUrl);
                         String description = filmDetails.getOrDefault("description", "");
                         String director = filmDetails.getOrDefault("director", "");
                         String year = filmDetails.getOrDefault("year", "");
@@ -59,6 +59,7 @@ public class ScraperKinoteka extends Scraper {
 
                         FilmModel film = new FilmModel("Kinoteka", title, description, director, year, imgPath, dateShowTime);
                         filmSchedule.add(film);
+                        logger.info("film {}", film.toString());
                     }
                 }
             }
