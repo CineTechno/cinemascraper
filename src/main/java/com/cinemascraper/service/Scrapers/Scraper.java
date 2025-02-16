@@ -8,7 +8,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
     @Service
 public abstract class Scraper {
-    String dateSelector;
+    public String dateSelector;
     String titleSelector;
     String url;
     String showTimeSelector;
@@ -25,7 +25,9 @@ public abstract class Scraper {
 
     }
 
-        abstract public List<FilmModel> getFilmSchedule ();
+        public List<FilmModel> getFilmSchedule (){
+        return tempListOfFilms;
+        };
 
         abstract public Map<String,String> getFilmDetails (String title);
 

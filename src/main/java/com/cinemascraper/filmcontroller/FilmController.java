@@ -4,11 +4,14 @@ import com.cinemascraper.model.EventModel;
 import com.cinemascraper.model.FilmImage;
 import com.cinemascraper.model.FilmModel;
 import com.cinemascraper.service.Scrapers.*;
-import com.cinemascraper.service.aiscrapers.ScraperWajda;
+import com.cinemascraper.service.Scrapers.ScraperWajda;
 import com.cinemascraper.service.tmdb.TMDBMovieService;
 import com.cinemascraper.utils.JsonParser;
+import org.jsoup.Jsoup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.ai.chat.model.ChatResponse;
+import org.springframework.ai.ollama.OllamaChatModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,11 +32,14 @@ public class FilmController {
     private final ImageDownloaderService imageDownloaderService;
     private final ScraperKinoteka scraperKinoteka;
     private final ScraperWajda scraperWajda;
+    private final OllamaChatModel ollamaChatModel;
     public FilmController(ScraperService scraperService, TMDBMovieService tmdbMovieService,
                           FilmRepository filmRepository, ScraperMuranow scraperMuranow,
                           ScraperAtlantic scraperAtlantic, ScraperIluzjon scraperIluzjon,
                           ImageDownloaderService imageDownloaderService,
-                          ScraperKinoteka scraperKinoteka, ScraperWajda scraperWajda) {
+                          ScraperKinoteka scraperKinoteka, ScraperWajda scraperWajda,
+                            OllamaChatModel ollamaChatModel) {
+        this.ollamaChatModel = ollamaChatModel;
         this.tmdbMovieService = tmdbMovieService;
         this.scraperService = scraperService;
         this.filmRepository = filmRepository;
@@ -84,7 +90,7 @@ public class FilmController {
 
     @GetMapping("/wajda")
     public List<EventModel> scrapeWajda() {
-       return scraperWajda.scrapeWajda();
+       return scraperWajda.getEventSchedule();
     }
 
     @GetMapping("/getFilmsFromCinema")

@@ -3,6 +3,7 @@ package com.cinemascraper.utils;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
 import java.util.HashMap;
@@ -72,6 +73,14 @@ public class DateParser {
 
         DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         return date.format(outputFormatter);
+    }
+
+    public static LocalDateTime parseDateWajda(String dateString, String showTimeString) {
+        String formattedDate = dateString.replaceAll("[a-zA-Z]","").trim()
+                + " 2025 " + showTimeString;
+        DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("dd.MM yyyy HH:mm", new Locale("pl", "PL"));
+        LocalDateTime dateTime = LocalDateTime.parse(formattedDate, inputFormatter);
+        return dateTime;
     }
 
 }

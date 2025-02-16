@@ -66,7 +66,9 @@ public class FilmRepository {
 
     public List<FilmImage> getImgPaths(){
         return jdbcClient.sql("SELECT title, img_path FROM films")
-                .query((rs,row) -> new FilmImage(rs.getString("title"),rs.getString("img_path")))
+                .query((rs,row) -> new FilmImage(
+                        rs.getString("title"),
+                        rs.getString("img_path")))
                 .list();
     }
 
