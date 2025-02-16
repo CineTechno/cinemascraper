@@ -1,4 +1,5 @@
 package com.cinemascraper.filmcontroller;
+import com.cinemascraper.filmRepository.EventRepository;
 import com.cinemascraper.filmRepository.FilmRepository;
 import com.cinemascraper.model.EventModel;
 import com.cinemascraper.model.FilmImage;
@@ -32,14 +33,14 @@ public class FilmController {
     private final ImageDownloaderService imageDownloaderService;
     private final ScraperKinoteka scraperKinoteka;
     private final ScraperWajda scraperWajda;
-    private final OllamaChatModel ollamaChatModel;
+    private final EventRepository eventRepository;
     public FilmController(ScraperService scraperService, TMDBMovieService tmdbMovieService,
                           FilmRepository filmRepository, ScraperMuranow scraperMuranow,
                           ScraperAtlantic scraperAtlantic, ScraperIluzjon scraperIluzjon,
                           ImageDownloaderService imageDownloaderService,
                           ScraperKinoteka scraperKinoteka, ScraperWajda scraperWajda,
-                            OllamaChatModel ollamaChatModel) {
-        this.ollamaChatModel = ollamaChatModel;
+                            EventRepository eventRepository) {
+        this.eventRepository = eventRepository;
         this.tmdbMovieService = tmdbMovieService;
         this.scraperService = scraperService;
         this.filmRepository = filmRepository;
@@ -84,13 +85,17 @@ public class FilmController {
     }
 
     @GetMapping("/kinoteka")
-    public void scrapeKinoteka() {
-        scraperKinoteka.getFilmSchedule().forEach(filmRepository::create);
+    public List<FilmModel> scrapeKinoteka() {
+        return scraperKinoteka.getFilmSchedule();
     }
 
     @GetMapping("/wajda")
-    public List<EventModel> scrapeWajda() {
-       return scraperWajda.getEventSchedule();
+    public ResponseEntity scrapeWajda() {
+
+       var eventList = scraperWajda.getEventSchedule();
+       eventList.forEach(eventRepository::save);
+       return ResponseEntity.ok(eventList);
+
     }
 
     @GetMapping("/getFilmsFromCinema")
@@ -98,11 +103,7 @@ public class FilmController {
        return  filmRepository.getFilmsFromCinema("atlantic");
     }
 
-    @GetMapping ("/json")
-    public List<EventModel> jsonParse () throws IOException {
-        return JsonParser.jsonParser("src/main/resources/wajda.json");
 
-    }
 
 }
 

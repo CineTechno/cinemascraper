@@ -50,7 +50,7 @@ public class FilmRepository {
                 .update();
 
         for (LocalDateTime dateTime:film.getDateShowTime()) {
-            jdbcClient.sql("INSERT INTO showtimes (film_id, cinema_id, show_datetime) VALUES (?, ?, ?)")
+            jdbcClient.sql("INSERT INTO showtimes (film_id, cinema_id, show_datetime) VALUES (?, ?, ?) ON CONFLICT(film_id, cinema_id, show_datetime) DO NOTHING")
                     .params(filmID, cinemaID, Timestamp.valueOf(dateTime))
                     .update();
         }

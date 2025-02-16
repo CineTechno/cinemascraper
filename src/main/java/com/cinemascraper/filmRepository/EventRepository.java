@@ -16,14 +16,21 @@ public class EventRepository {
     }
 
     public void save(EventModel event) {
-        String sql = "insert into events (title, description, link) values (?, ?, ?) " +
-                "on conflict(title) DO UPDATE SET " +
-                "description = EXCLUDED.description, image_path = EXCLUDED.link " +
-                "returning id_event";
-        jdbcTemplate.queryForObject(sql, Integer.class, event.getTitle(), event.getDescription(), event.getLink());
+        String sql = "INSERT INTO events (title, description, link) VALUES (?, ?, ?) " +
+                "ON CONFLICT(title) DO UPDATE SET " +
+                "description = EXCLUDED.description, link = EXCLUDED.link " +
+                "RETURNING id_event";
+        Integer event_id = jdbcTemplate.queryForObject(sql, Integer.class, event.getTitle(), event.getDescription(), event.getLink());
 
-        String sqlDate = "insert into date_time_event(date_and_time) values (?,?) ";
-        jdbcTemplate.queryForObject(sqlDate, Integer.class, event.getDateAndTime());
+
+        String sqlDate = "insert into date_time_event (date_and_time, id_event) values (?,?) ON CONFLICT (date_and_time, id_event) DO NOTHING";
+        jdbcTemplate.update(sqlDate, event.getDateAndTime(), event_id);
+
+        String sqlOrganisers = "insert into organisers(name) values (?) ON CONFLICT(name) DO UPDATE SET name=EXCLUDED.name RETURNING id;";
+        Integer organiser_id= jdbcTemplate.queryForObject(sqlOrganisers, Integer.class, event.getOrganiser());
+
+        String sqlOrgEvents = "insert into organisers_events(id_event, id_organiser) values (?,?) ON CONFLICT(id_event, id_organiser) DO NOTHING";
+        jdbcTemplate.update(sqlOrgEvents, event_id, organiser_id);
     }
 
 }

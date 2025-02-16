@@ -18,19 +18,26 @@ public class ScraperService {
     private final ScraperIluzjon scraperIluzjon;
     private final FilmRepository filmRepository;
     private final TMDBMovieService oMDbApi;
+    private final ScraperKinoteka scraperKinoteka;
     private final Logger logger = LoggerFactory.getLogger(FilmController.class);
-    public ScraperService(ScraperMuranow scraperMuranow, ScraperAtlantic scraperAtlantic, ScraperIluzjon scraperIluzjon, FilmRepository filmRepository, TMDBMovieService oMDbApi) {
+    public ScraperService(ScraperMuranow scraperMuranow,
+                          ScraperAtlantic scraperAtlantic,
+                          ScraperIluzjon scraperIluzjon,
+                          FilmRepository filmRepository,
+                          TMDBMovieService oMDbApi,
+                          ScraperKinoteka scraperKinoteka ) {
         this.scraperMuranow = scraperMuranow;
         this.scraperAtlantic = scraperAtlantic;
         this.scraperIluzjon = scraperIluzjon;
         this.filmRepository = filmRepository;
+        this.scraperKinoteka = scraperKinoteka;
         this.oMDbApi = oMDbApi;
 
     }
 
     public ResponseEntity<String> scrapeAll (){
         List<Scraper> listOfScrapers = new ArrayList<>();
-        Collections.addAll(listOfScrapers, scraperMuranow, scraperAtlantic, scraperIluzjon);
+        Collections.addAll(listOfScrapers, scraperMuranow, scraperAtlantic, scraperIluzjon, scraperKinoteka);
 
         try{
             listOfScrapers.forEach(scraper ->  scraper.getFilmSchedule().forEach(filmRepository::create));

@@ -13,6 +13,7 @@ import org.jsoup.select.Elements;
 
 
 import java.io.IOException;
+import java.text.Normalizer;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -80,7 +81,7 @@ public class ScraperMuranow extends Scraper {
 
     @Override
     public Map<String,String> getFilmDetails(String title) {
-        String processedTitle = title.replaceAll("[.!-]", "").replaceAll(" ", "-");
+        String processedTitle = normalizeText(title);
         Map<String,String> detailsMap = new HashMap<>();
         try {
             Document website = Jsoup.connect("https://kinomuranow.pl/film/" + processedTitle).get();
@@ -110,7 +111,11 @@ public class ScraperMuranow extends Scraper {
         return LocalDateTime.parse(formattedDate + " " + showtime, formatter);
     }
 
-
+    public static String normalizeText(String text){
+        String normalized = Normalizer.normalize(text, Normalizer.Form.NFD).replaceAll("[łŁ]","l").replaceAll("[^\\p{ASCII}]", "");
+        String processedTitle = normalized.replaceAll("[^a-zA-Z\\s-]", "").replaceAll(" - "," ").replaceAll(" ", "-").replaceAll("[łŁ]","l");
+        return processedTitle;
+    }
 
 
 }

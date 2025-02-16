@@ -12,6 +12,9 @@ import java.util.regex.Pattern;
 public class Test {
 
     public static void main(String[] args) {
-
+        String title = "Dziewczyna z igłą";
+        String normalized = Normalizer.normalize(title, Normalizer.Form.NFD).replaceAll("[łŁ]","l").replaceAll("[^\\p{ASCII}]", "");
+        String processedTitle = normalized.replaceAll("[^a-zA-Z\\s-]", "").replaceAll(" ", "-").replaceAll("[łŁ]","l");
+        System.out.println(processedTitle);
     }
 }
