@@ -1,8 +1,6 @@
-import "@/styles/globals.css"
-import type { Metadata } from "next"
-import { Inter } from "next/font/google"
 
-const inter = Inter({ subsets: ["latin"] })
+import type { Metadata } from "next"
+import "../styles/globals.css";
 
 export const metadata: Metadata = {
     title: "Cinema App",
@@ -14,10 +12,14 @@ export default function RootLayout({children}: {
 }) {
     return (
         <html lang="en">
-        <body className={`${inter.className} min-h-screen bg-background`}>
+        <body className= "min-h-screen bg-background flex flex-col">
         <header className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-            <div className="container flex h-16 items-center px-4">
-                <h1 className="text-2xl font-bold tracking-tight">W-Warto Zobaczyć</h1>
+            <div className="max-w-7xl mx-auto h-16 px-4 md:px-6 lg:px-8 flex items-center">
+                <span className=" inline-block text-3xl text-blue-800 font-bold tracking-tight">W-war</span>
+                <span className="inline-block text-3xl font-bold tracking-tight">to zobaczyć</span>
+                <span className="text-lg font-medium tracking-tight ml-auto">
+        Tylko dobre kina w Warszawie
+    </span>
             </div>
         </header>
 

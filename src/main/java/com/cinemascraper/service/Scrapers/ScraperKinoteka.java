@@ -61,9 +61,16 @@ public class ScraperKinoteka extends Scraper {
 
 
                     String description = filmWebsite.select("div.mce-content-body.text-body-small").text();
-                    String director = filmWebsite.select("dl.p-movie-details__general-info dd").text();
-                    String year = filmWebsite.select("dl.p-movie-details__general-info dd").text();
-                    String imgPath = filmWebsite.select("dl.p-movie-details__hero-poster a").attr("href");
+                    Elements filmInfoLabels = filmWebsite.select(".p-movie-details__general-info dt");
+                    Elements filmInfoValue = filmWebsite.select(".p-movie-details__general-info dd");
+                    Map<String, String> filmInfo = new HashMap<>();
+                    for(int j = 0; j<filmInfoLabels.size(); j++){
+                        filmInfo.put(filmInfoLabels.get(j).text(), filmInfoValue.get(j).text());
+                    }
+                    String director = filmInfo.get("Reżyseria:");
+                    String year = filmInfo.get("Data premiery:").replaceAll(".*?(\\d{4}).*","$1");
+                    String imgPath = filmWebsite.select(".p-movie-details__hero-poster img").attr("data-src");
+                    System.out.println(filmWebsite.select(".p-movie-details__hero-poster").outerHtml());
 
                     //creating film object
                     FilmModel film = new FilmModel("Kinoteka", title, description, director, year, imgPath, dateTimes);

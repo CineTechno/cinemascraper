@@ -1,3 +1,4 @@
+"use client"
 import { useState } from "react"
 import type { Film } from "@/types"
 import { Card, CardContent } from "@/components/ui/card"
@@ -6,22 +7,30 @@ import Image from "next/image"
 
 
 
-export function FilmCard(film:Film) {
+
+export function FilmCard({film}: { film: Film }) {
     const [isOpen, setIsOpen] = useState(false)
 
     return (
         <>
             <Card
-                className="group cursor-pointer transition-transform duration-300 hover:scale-105"
+                className="group cursor-pointer transition-transform duration-300 hover:scale-105 overflow-hidden }"
                 onClick={() => setIsOpen(true)}
             >
-                <CardContent className="p-0 relative aspect-[2/3]">
-                    <Image src={film.imgPath || "/placeholder.svg"} alt={film.title} fill className="object-cover rounded-lg" />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent rounded-lg" />
-                    <div className="absolute bottom-0 p-4 text-white">
-                        <h3 className="font-bold text-xl mb-2">{film.title}</h3>
-                        <p className="opacity-0 group-hover:opacity-100 transition-opacity duration-300">{film.description}</p>
+                <CardContent className="relative aspect-[2/3] w-full ">
+                        <Image src={film.imgPath || "/placeholder.svg"}
+                               alt={film.title}
+                               fill
+                               className="object-cover "/>
+                    <div className="absolute top-0 p-4 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        {film.director} <br/>
+                        {film.year}
                     </div>
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"/>
+                        <div className="absolute bottom-0 p-4 text-white transition-transform translate-y-24 group-hover:-translate-y-12 duration-300">
+                            <h3 className="font-bold text-xl mb-2">{film.title}</h3>
+                            <p className="  max-h-32 overflow-hidden mask-gradient opacity-0 group-hover:opacity-100 transition-opacity duration-300">{film.description}</p>
+                        </div>
                 </CardContent>
             </Card>
 
