@@ -60,7 +60,7 @@ public class ScraperIluzjon extends Scraper{
                         if (existingFilm != null) {
                             existingFilm.getDateShowTime().add(dateShowTime);
                         } else {
-                            FilmModel filmModel = new FilmModel("Iluzjon", title, description, director, year, imgPath, new ArrayList<>(List.of(dateShowTime)));
+                            FilmModel filmModel = new FilmModel("Iluzjon", title, description, director, year, imgPath, filmURL, new ArrayList<>(List.of(dateShowTime)));
                             listOfFilms.add(filmModel);
 
                         }

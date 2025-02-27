@@ -93,7 +93,8 @@ export const cinemaSchedules:CinemaSchedule[] =[{
                 director: "Wim Wenders",
                 year: "2023",
                 imgPath: "/images/Climax.jpg",
-                rating: 8.4
+                rating: 8.4,
+                link:"www.murato.pl"
             },
             showtimes: [
                 "2024-02-22T12:30:00",

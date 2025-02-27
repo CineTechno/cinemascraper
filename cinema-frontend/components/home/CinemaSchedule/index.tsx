@@ -1,3 +1,4 @@
+'client useState'
 import {CinemaSchedule, cinemaSchedules} from "@/types";
 import {useState} from "react";
 import {format} from "date-fns"
@@ -8,18 +9,20 @@ import {DateNavigation} from "@/components/home/CinemaSchedule/date-navigation";
 
 
 interface CinemaScheduleProps {
-    cinemaSchedule: CinemaSchedule;
+    allCinemaSchedules: CinemaSchedule[];
+    currentCinemaSchedule:CinemaSchedule;
     selectedDate: Date;
+    onDateChange: (date:Date) => void
 }
 
-export function CinemaSchedule({ cinemaSchedule:{id, cinemaName, filmsWithShowtimes}, selectedDate }: CinemaScheduleProps) {
+export function CinemaSchedule({ allCinemaSchedules, currentCinemaSchedule, selectedDate, onDateChange }: CinemaScheduleProps) {
 
-
+    const {id,cinemaName,filmsWithShowtimes} = currentCinemaSchedule;
     return(
         <div className="p-10">
             <CardHeader className="flex flex-row gap-3">
                 <CardTitle className= "translate-y-[1px] px-0" >{cinemaName}</CardTitle>
-                <DateNavigation date={new Date}></DateNavigation>
+                <DateNavigation date={selectedDate} onDateChange={onDateChange}></DateNavigation>
 
             </CardHeader>
             <CardContent>

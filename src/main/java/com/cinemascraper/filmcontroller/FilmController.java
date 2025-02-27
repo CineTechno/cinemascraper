@@ -58,10 +58,11 @@ public class FilmController {
     }
 
 
-    @GetMapping("/iluzjon")
+    @GetMapping("/muranow")
     public void getFilmDetails() {
-    List<FilmModel> films = scraperIluzjon.getFilmSchedule();
-    films.forEach(filmRepository::create);
+    scraperMuranow.getFilmSchedule().forEach(filmRepository::create);
+
+
 
     }
 

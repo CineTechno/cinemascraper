@@ -15,20 +15,22 @@ public class FilmModel {
     String director;
     String year;
     String imgPath;
+    String link;
 
     public FilmModel() {}
 
-    public FilmModel(String cinema, String title, String description, String director, String year, String imgPath, LocalDateTime dateShowTime) {
-        this(cinema, title, description, director, year, imgPath, List.of(dateShowTime));
+    public FilmModel(String cinema, String title, String description, String director, String year, String imgPath, String link, LocalDateTime dateShowTime) {
+        this(cinema, title, description, director, year, imgPath, link, List.of(dateShowTime));
     }
 
-    public FilmModel(String cinema, String title,String description, String director, String year, String imgPath, List<LocalDateTime> dateShowTime) {
+    public FilmModel(String cinema, String title,String description, String director, String year, String imgPath, String link, List<LocalDateTime> dateShowTime) {
         this.cinema = cinema;
         this.title = title;
         this.description = description;
         this.director = director;
         this.year = year;
         this.imgPath = imgPath;
+        this.link = link;
         this.dateShowTime = new ArrayList<>(dateShowTime);
     }
 
@@ -57,6 +59,8 @@ public class FilmModel {
     public String getImgPath() {
         return imgPath;
     }
+
+    public String getLink() {return link;}
 
     public List<LocalDateTime> getDateShowTime() {
         return dateShowTime;

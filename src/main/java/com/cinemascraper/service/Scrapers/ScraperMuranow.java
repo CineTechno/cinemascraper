@@ -67,15 +67,17 @@ public class ScraperMuranow extends Scraper {
                 String director = filmDetails.getOrDefault("director","");
                 String year = filmDetails.getOrDefault("year","");
                 String imgPath = filmDetails.getOrDefault("imgPath","");
+                String link = filmDetails.getOrDefault("link","");
                 if (!currentDate.isEmpty()) {
 
-                    FilmModel film = new FilmModel("Muranow", title, description, director, year, imgPath, dateShowTime);
+                    FilmModel film = new FilmModel("Muranow", title, description, director, year, imgPath, link, dateShowTime);
 
                     tempListOfFilms.add(film);
                 }
             }
 
         }
+        System.out.println(tempListOfFilms);
         return tempListOfFilms;
     }
 
@@ -93,6 +95,7 @@ public class ScraperMuranow extends Scraper {
             detailsMap.put("director", director);
             detailsMap.put("year", year);
             detailsMap.put("imgPath", imgPath);
+            detailsMap.put("link", "https://kinomuranow.pl/film/" + processedTitle);
             return detailsMap;
         }catch(IOException e){
             e.printStackTrace();

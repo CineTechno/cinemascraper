@@ -70,10 +70,9 @@ public class ScraperKinoteka extends Scraper {
                     String director = filmInfo.get("Reżyseria:");
                     String year = filmInfo.get("Data premiery:").replaceAll(".*?(\\d{4}).*","$1");
                     String imgPath = filmWebsite.select(".p-movie-details__hero-poster img").attr("data-src");
-                    System.out.println(filmWebsite.select(".p-movie-details__hero-poster").outerHtml());
 
                     //creating film object
-                    FilmModel film = new FilmModel("Kinoteka", title, description, director, year, imgPath, dateTimes);
+                    FilmModel film = new FilmModel("Kinoteka", title, description, director, year, imgPath, filmUrl,  dateTimes);
                     filmSchedule.add(film);
                 }
 

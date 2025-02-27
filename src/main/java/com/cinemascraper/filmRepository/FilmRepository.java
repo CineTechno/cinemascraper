@@ -54,6 +54,11 @@ public class FilmRepository {
                     .params(filmID, cinemaID, Timestamp.valueOf(dateTime))
                     .update();
         }
+
+        jdbcClient.sql("INSERT INTO links (film_id, cinema_id, link) VALUES (?, ?, ?)" +
+                        "ON CONFLICT (film_id,cinema_id,link) DO NOTHING ")
+        .params(filmID, cinemaID, film.getLink())
+                .update();
     }
 
     public void addRating(List<TMDBMovie> tmdbMovieList) {

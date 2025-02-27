@@ -59,12 +59,14 @@ public class ScraperAtlantic extends Scraper {
                 String director = filmDetails.getOrDefault("director","");
                 String year = filmDetails.getOrDefault("year", "");
                 String imgPath = filmDetails.getOrDefault("imgPath","");
+                String link = filmDetails.getOrDefault("link","");
+
                 List<LocalDateTime> dateShowTime = new ArrayList<>();
                 List<String> showTime = movie.select(showTimeSelector).eachText();
                 for(String time : showTime) {
                     LocalDateTime dateTime = LocalDateTime.parse(today + " " + time, formatter);
                     dateShowTime.add(dateTime);
-                    FilmModel filmModel = new FilmModel("Atlantic",title,description,director,year,imgPath, dateShowTime);
+                    FilmModel filmModel = new FilmModel("Atlantic",title,description,director,year,imgPath, link, dateShowTime);
                     tempListOfFilms.add(filmModel);
                 }
 
@@ -96,6 +98,7 @@ public class ScraperAtlantic extends Scraper {
             detailsMap.put("director", director);
             detailsMap.put("year", year);
             detailsMap.put("imgPath", imgPath);
+            detailsMap.put("link", "https://www.novekino.pl/kina/atlantic/"+titleId);
             return detailsMap;
         }catch(IOException e){
             e.printStackTrace();

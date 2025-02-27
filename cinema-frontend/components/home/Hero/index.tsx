@@ -7,10 +7,11 @@ import {Film, FilmEvent} from "@/types";
 interface HeroProps {
     films: Film[]
     featuredEvent: FilmEvent
+    selectedDate:Date
 }
 
 
-export function Hero({ films, featuredEvent }: HeroProps) {
+export function Hero({ films, featuredEvent, selectedDate }: HeroProps) {
     return (
         <section className="relative">
 

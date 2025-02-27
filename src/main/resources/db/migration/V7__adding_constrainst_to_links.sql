@@ -1,0 +1,1 @@
+ALTER TABLE links ADD CONSTRAINT unique_id_date_links UNIQUE(film_id, cinema_id);
