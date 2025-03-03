@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.ai.chat.model.ChatResponse;
 import org.springframework.ai.ollama.OllamaChatModel;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -99,9 +100,16 @@ public class FilmController {
 
     }
 
-    @GetMapping("/getFilmsFromCinema")
-    public List<FilmModel> getFilmsFromCinema() {
-       return  filmRepository.getFilmsFromCinema("atlantic");
+    @GetMapping("/getcinemadate")
+
+    public String getFilmsFromCinema(@RequestParam String cinema,
+                                     @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") String date) {
+       return  filmRepository.getCinemaDateAsJson(cinema, date);
+    }
+
+    @GetMapping("/cinemaschedule")
+    public String getCinemaSchedule(@RequestParam String cinema) {
+        return filmRepository.getCinemaAsJson(cinema);
     }
 
 

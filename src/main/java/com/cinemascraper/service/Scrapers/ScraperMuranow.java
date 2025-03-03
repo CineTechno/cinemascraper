@@ -59,7 +59,7 @@ public class ScraperMuranow extends Scraper {
             }
 
             else if (element.is(titleSelector)) {
-                String title = element.text().replaceAll("\\d|:", "").trim();
+                String title = element.text().replaceAll("\\d{2}:\\d{2}", "").trim();
                 String showtime = element.select("span.movie-calendar-info__date").text();
                 dateShowTime = dateShowTimeFormatter(currentDate, showtime);
                 Map<String,String> filmDetails = Objects.requireNonNullElse(getFilmDetails(title), Collections.emptyMap());
@@ -116,7 +116,7 @@ public class ScraperMuranow extends Scraper {
 
     public static String normalizeText(String text){
         String normalized = Normalizer.normalize(text, Normalizer.Form.NFD).replaceAll("[łŁ]","l").replaceAll("[^\\p{ASCII}]", "");
-        String processedTitle = normalized.replaceAll("[^a-zA-Z\\s-]", "").replaceAll(" - "," ").replaceAll(" ", "-").replaceAll("[łŁ]","l");
+        String processedTitle = normalized.replaceAll("[^a-zA-Z0-9\\s-]", "").replaceAll(" of ", "-").replaceAll("The ", "").replaceAll(" - "," ").replaceAll(" ", "-").replaceAll("[łŁ]","l");
         return processedTitle;
     }
 

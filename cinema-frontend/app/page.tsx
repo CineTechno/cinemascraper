@@ -1,24 +1,42 @@
 
-'use client'
 import "../styles/globals.css";
 import {Hero} from "@/components/home/Hero";
-import {cinemaSchedule, cinemaSchedules, filmEvent, films} from "@/types";
-import {DateNavigation} from "@/components/home/CinemaSchedule/date-navigation";
-import { format } from "date-fns";
+import {CinemaSchedule, cinemaSchedules, filmEvent, films} from "@/types";
 import {CinemaSchedule} from "@/components/home/CinemaSchedule";
-import {Card} from "@/components/ui/card";
 import {useState} from "react";
+import {GetStaticProps} from "next";
+import {fetchAllCinemaSchedules} from "@/lib/cinema-data";
 
-export default function Home() {
+
+export const getStaticProps: GetStaticProps = async () => {
+
+    const cinemaNames = ['Kinoteka', 'Muranow', 'Atlantic', 'Iluzjon'];
+
+    const schedules = await fetchAllCinemaSchedules(cinemaNames);
+
+    return {
+        props: {
+            schedules:schedules,
+        },
+        revalidate: 3600,
+    };
+};
+
+
+export default function Home({schedules}:{schedules:CinemaSchedule[]}) {
     const[selectedDate, setSelectedDate] = useState(new Date)
   return (
       <>
-    <Hero films={films} featuredEvent={filmEvent} selectedDate={selectedDate}></Hero>
+    <Hero films={films}
+          featuredEvent={filmEvent}
+          selectedDate={selectedDate}>
+
+    </Hero>
         <div className="flex-col">
 
-          {cinemaSchedules.map(schedule => (
+          {schedules.map(schedule => (
               <CinemaSchedule key={schedule.id}
-                              allCinemaSchedules={cinemaSchedules}
+                              allCinemaSchedules={schedules}
                               currentCinemaSchedule={schedule}
                               selectedDate={selectedDate}
                               onDateChange={setSelectedDate}

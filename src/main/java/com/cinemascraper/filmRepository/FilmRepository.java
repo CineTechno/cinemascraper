@@ -1,5 +1,6 @@
 package com.cinemascraper.filmRepository;
 
+import com.cinemascraper.dto.CinemaDto;
 import com.cinemascraper.model.FilmImage;
 import com.cinemascraper.model.FilmModel;
 import com.cinemascraper.model.TMDBMovie;
@@ -96,6 +97,87 @@ public class FilmRepository {
                 .params(cinema)
                 .query(FilmModel.class)
                 .list();
+    }
+
+    public String getCinemaAsJson(String cinemaName) {
+        return jdbcClient.sql(
+                        "SELECT jsonb_build_object( " +
+                                "  'id', c.id, " +
+                                "  'cinemaName', c.name, " +
+                                "  'filmsWithShowtimes', " +
+                                "    (SELECT jsonb_agg( " +
+                                "      jsonb_build_object( " +
+                                "        'film', jsonb_build_object( " +
+                                "          'id', f.id, " +
+                                "          'title', f.title, " +
+                                "          'description', f.description, " +
+                                "          'director', f.director, " +
+                                "          'year', f.release_year, " +
+                                "          'imgPath', f.img_path, " +
+                                "          'rating', f.rating" +
+                                "        ), " +
+                                "        'showtimes', (SELECT jsonb_agg(s.show_datetime) FROM showtimes s WHERE s.cinema_id = c.id AND s.film_id = f.id) " +
+                                "      ) " +
+                                "    ) FROM films f WHERE f.id IN (SELECT DISTINCT film_id FROM showtimes WHERE cinema_id = c.id) " +
+                                "AND f.title IS NOT NULL " +
+                                "      AND f.description IS NOT NULL " +
+                                "      AND f.director IS NOT NULL " +
+                                "      AND f.release_year IS NOT NULL " +
+                                "      AND f.img_path IS NOT NULL " +
+                                "      AND f.rating IS NOT NULL " +
+                                ")" +
+                                ") AS cinema_json " +
+                                "FROM cinemas c " +
+                                "WHERE c.name = :cinemaName"
+                                )
+                .param("cinemaName", cinemaName)
+                .query(String.class)
+                .single();
+    }
+
+    public String getCinemaDateAsJson(String cinemaName, String date) {
+        return jdbcClient.sql(
+                        "SELECT jsonb_build_object( " +
+                                "  'id', c.id, " +
+                                "  'cinemaName', c.name, " +
+                                "  'filmsWithShowtimes', " +
+                                "    (SELECT jsonb_agg( " +
+                                "      jsonb_build_object( " +
+                                "        'film', jsonb_build_object( " +
+                                "          'id', f.id, " +
+                                "          'title', f.title, " +
+                                "          'description', f.description, " +
+                                "          'director', f.director, " +
+                                "          'year', f.release_year, " +
+                                "          'imgPath', f.img_path, " +
+                                "          'rating', f.rating" +
+                                "        ), " +
+                                "        'showtimes', (SELECT jsonb_agg(s.show_datetime) " +
+                                "                      FROM showtimes s " +
+                                "                      WHERE s.cinema_id = c.id " +
+                                "                      AND s.film_id = f.id " +
+                                "                      AND s.show_datetime::date = :date::date) " +
+                                "      ) " +
+                                "    ) FROM films f " +
+                                "    WHERE f.id IN (SELECT DISTINCT film_id " +
+                                "                  FROM showtimes " +
+                                "                  WHERE cinema_id = c.id " +
+                                "                  AND show_datetime::date = :date::date) " +
+                                "    AND f.title IS NOT NULL " +
+                                "    AND f.description IS NOT NULL " +
+                                "    AND f.director IS NOT NULL " +
+                                "    AND f.release_year IS NOT NULL " +
+                                "    AND f.img_path IS NOT NULL " +
+                                "    AND f.rating IS NOT NULL " +
+                                ")" +
+                                ") AS cinema_json " +
+                                "FROM cinemas c " +
+                                "WHERE c.name = :cinemaName"
+                )
+                .param("cinemaName", cinemaName)
+                .param("date", date)  // Add date parameter
+                .query(String.class)
+                .single();
     }
 }
 
