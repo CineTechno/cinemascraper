@@ -38,6 +38,7 @@ public class ScraperAtlantic extends Scraper {
         LocalDate today;
 
 
+
         for (int i = 0; i < 7; i++) {
             today = LocalDate.now().plusDays(i);
             String dailyURL = url + today;
@@ -45,7 +46,7 @@ public class ScraperAtlantic extends Scraper {
             Document doc=null;
 
             try {
-                doc = Jsoup.connect(dailyURL).timeout(2000).get();
+                doc = Jsoup.connect(dailyURL).get();
             }catch(IOException e){
                 e.printStackTrace();}
             movies = doc.select("tr.repertoire-movie-tr");
@@ -53,6 +54,7 @@ public class ScraperAtlantic extends Scraper {
             for(Element movie : movies) {
                 Element titleId =movie.selectFirst(".repertoire-movie-title a");
                  String titleIdStr =titleId.attr("href");
+
                 Map<String, String> filmDetails = Objects.requireNonNullElse(getFilmDetails(titleIdStr), Collections.emptyMap());
                 String title = titleProcessing(movie.select(titleSelector).text());
                 String description = filmDetails.getOrDefault("description", "");
@@ -60,21 +62,20 @@ public class ScraperAtlantic extends Scraper {
                 String year = filmDetails.getOrDefault("year", "");
                 String imgPath = filmDetails.getOrDefault("imgPath","");
                 String link = filmDetails.getOrDefault("link","");
-
                 List<LocalDateTime> dateShowTime = new ArrayList<>();
                 List<String> showTime = movie.select(showTimeSelector).eachText();
                 for(String time : showTime) {
                     LocalDateTime dateTime = LocalDateTime.parse(today + " " + time, formatter);
                     dateShowTime.add(dateTime);
-                    FilmModel filmModel = new FilmModel("Atlantic",title,description,director,year,imgPath, link, dateShowTime);
-                    tempListOfFilms.add(filmModel);
                 }
+                FilmModel filmModel = new FilmModel("Atlantic",title,description,director,year,imgPath, link, dateShowTime);
 
-
-
+                tempListOfFilms.add(filmModel);
 
             }
+
         }
+        System.out.println(tempListOfFilms);
         return tempListOfFilms;
     }
 
@@ -91,7 +92,13 @@ public class ScraperAtlantic extends Scraper {
             Document website = Jsoup.connect("https://www.novekino.pl/kina/atlantic/"+titleId).get();
             String description = Objects.requireNonNull(website.selectFirst("p"))
                     .text().trim();
-            String imgPath = Objects.requireNonNull(website.selectFirst("img.sp-image").attr("src"));
+            Elements images = Objects.requireNonNull(website.select("img"));
+            System.out.println(images.size());
+            String imgPath = null;
+            if(images.size()>2){
+                imgPath=images.get(5).attr("src");
+            }
+            System.out.println(imgPath);
             String director = Objects.requireNonNull(website.select("div.movie_details_panel-info dl dd:nth-of-type(1)")).text();
             String year = Objects.requireNonNull(website.select("div.movie_details_panel-info dl dd:nth-of-type(5)")).text();
             detailsMap.put("description", description);

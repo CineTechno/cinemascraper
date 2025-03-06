@@ -1,22 +1,17 @@
 'use client'
-import {useState} from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel"
 import { Calendar } from "@/components/ui/calendar"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { Button } from "@/components/ui/button"
 import {CalendarIcon, ChevronLeft, ChevronRight} from "lucide-react"
 import { format } from "date-fns"
 import { cn } from "@/lib/utils"
-import {CinemaSchedule} from "@/types";
 import { addDays, subDays } from 'date-fns'
+import {useDateContext} from "@/context/DateContext";
 
-export const DateNavigation = ({ date, onDateChange }: {
-    date: Date,
-    onDateChange?: (date: Date) => void
-}) => {
-    const handlePrevDay = () => onDateChange?.(subDays(date, 1))
-    const handleNextDay = () => onDateChange?.(addDays(date, 1))
+export const DateNavigation = () => {
+    const {selectedDate, setSelectedDate} = useDateContext()
+    const handlePrevDay = () => setSelectedDate(subDays(selectedDate, 1))
+    const handleNextDay = () => setSelectedDate(addDays(selectedDate, 1))
 
     return (
         <div className="flex items-center h-2">
@@ -37,19 +32,22 @@ export const DateNavigation = ({ date, onDateChange }: {
                         variant="ghost"
                         className={cn(
                             " justify-start text-left font-normal",
-                            !date && "text-muted-foreground"
+                            !selectedDate && "text-muted-foreground"
                         )}
                     >
                         <CalendarIcon></CalendarIcon>
-                        {date ? format(date, "P") : <span >Pick a date</span>}
+                        {selectedDate ? format(selectedDate, "P") : <span >Pick a selectedDate</span>}
                     </Button>
                 </PopoverTrigger>
-                <PopoverContent className="w-auto p-0" align="end">
+                <PopoverContent className="w-auto p-0 bg-white" align="end">
                     <Calendar
                         mode="single"
-                        selected={date}
-                        onSelect={(newDate) => newDate && onDateChange?.(newDate)}
+                        selected={selectedDate}
+                        onSelect={(newDate) => newDate && setSelectedDate(newDate)}
                         initialFocus
+                        fromDate={new Date()}
+                        toDate={addDays(new Date(), 7)}
+                        disableNavigation
                     />
                 </PopoverContent>
             </Popover>
@@ -60,7 +58,9 @@ export const DateNavigation = ({ date, onDateChange }: {
                 onClick={handleNextDay}
                 className="px-0 py-0"
             >
-                <ChevronRight/>
+                <div>
+                    <ChevronRight/>
+                </div>
             </Button>
         </div>
     );

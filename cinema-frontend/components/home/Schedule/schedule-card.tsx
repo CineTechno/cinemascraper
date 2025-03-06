@@ -1,5 +1,5 @@
 'use client'
-import type {FilmsWithShowtimes} from "@/types"
+import type {CinemaSchedule, FilmsWithShowtimes} from "@/types"
 import { Card, CardContent } from "@/components/ui/card"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import Image from "next/image"
@@ -8,10 +8,11 @@ import {format} from "date-fns";
 
 interface ScheduleCardProps {
     filmsWithShowTimes: FilmsWithShowtimes
+    allCinemaSchedules:CinemaSchedule[]
     className?: string
 }
 
-export function ScheduleCard({filmsWithShowTimes, className}:ScheduleCardProps ) {
+export function ScheduleCard({filmsWithShowTimes, allCinemaSchedules, className}:ScheduleCardProps ) {
     const [isOpen, setIsOpen] = useState(false)
     const { film, showtimes } = filmsWithShowTimes;
 

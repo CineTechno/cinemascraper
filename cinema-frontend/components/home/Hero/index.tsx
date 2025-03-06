@@ -1,17 +1,17 @@
 import {HeroGrid} from "@/components/home/Hero/HeroGrid";
 import {HeroBackground} from "@/components/home/Hero/HeroBackground";
 import {HeroContent} from "@/components/home/Hero/HeroContent";
-import {Film, FilmEvent} from "@/types";
+import {CinemaSchedule, Film, FilmEvent} from "@/types";
 
 
 interface HeroProps {
-    films: Film[]
+    schedules: CinemaSchedule[]
     featuredEvent: FilmEvent
     selectedDate:Date
 }
 
 
-export function Hero({ films, featuredEvent, selectedDate }: HeroProps) {
+export function Hero({ schedules, featuredEvent}: HeroProps) {
     return (
         <section className="relative">
 
@@ -21,7 +21,7 @@ export function Hero({ films, featuredEvent, selectedDate }: HeroProps) {
                     title="Polecane Filmy i Wydarzenia"
                 />
                 <HeroGrid
-                    films={films}
+                    films={schedules}
                     featuredEvent={featuredEvent}
                 />
             </div>

@@ -75,6 +75,11 @@ public class FilmModel {
         return "FilmModel{" +
                 "cinema='" + cinema + '\'' +
                 ", title='" + title + '\'' +
+                ", description='" + description + '\'' +
+                ", director='" + director + '\'' +
+                ", year='" + year + '\'' +
+                ", imgPath='" + imgPath + '\'' +
+                ", link='" + link + '\'' +
                 ", dateShowTime=" + dateShowTime +
                 '}';
     }

@@ -1,49 +1,34 @@
-
-import "../styles/globals.css";
+import { fetchAllCinemaSchedules } from "@/lib/cinema-data";
+import ClientWrapper from "@/components/ClientWrapper";
+import {DateProvider} from "@/context/DateContext";
 import {Hero} from "@/components/home/Hero";
-import {CinemaSchedule, cinemaSchedules, filmEvent, films} from "@/types";
-import {CinemaSchedule} from "@/components/home/CinemaSchedule";
-import {useState} from "react";
-import {GetStaticProps} from "next";
-import {fetchAllCinemaSchedules} from "@/lib/cinema-data";
+import {filmEvent, films} from "@/types";
+import {Schedule} from "@/components/home/Schedule";
 
+// Revalidation timing
+export const revalidate = 3600; // Revalidate every hour
 
-export const getStaticProps: GetStaticProps = async () => {
-
+// Server Component - fetches data at build time
+export default async function Page() {
     const cinemaNames = ['Kinoteka', 'Muranow', 'Atlantic', 'Iluzjon'];
-
     const schedules = await fetchAllCinemaSchedules(cinemaNames);
 
-    return {
-        props: {
-            schedules:schedules,
-        },
-        revalidate: 3600,
-    };
-};
-
-
-export default function Home({schedules}:{schedules:CinemaSchedule[]}) {
-    const[selectedDate, setSelectedDate] = useState(new Date)
-  return (
-      <>
-    <Hero films={films}
-          featuredEvent={filmEvent}
-          selectedDate={selectedDate}>
-
-    </Hero>
-        <div className="flex-col">
-
-          {schedules.map(schedule => (
-              <CinemaSchedule key={schedule.id}
-                              allCinemaSchedules={schedules}
-                              currentCinemaSchedule={schedule}
-                              selectedDate={selectedDate}
-                              onDateChange={setSelectedDate}
-              ></CinemaSchedule>
-          ))
-          }
-        </div>
-      </>
-  )
+    // Pass data to client component
+    return (
+        <DateProvider>
+            <Hero
+                schedules={schedules}
+                featuredEvent={filmEvent}
+            />
+            <div className="flex-col">
+                {schedules.map(schedule => (
+                    <Schedule
+                        key={schedule.id}
+                        allCinemaSchedules={schedules}
+                        currentCinemaSchedule={schedule}
+                    />
+                ))}
+            </div>
+        </DateProvider>
+    );
 }
