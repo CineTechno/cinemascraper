@@ -34,7 +34,7 @@ export function Schedule({ allCinemaSchedules, currentCinemaSchedule}: CinemaSch
             }
        }).filter(item => item.showtimes.length>0).sort((a,b)=>b.film.rating - a.film.rating)
 
-    console.log(filteredFilmsWithShowtimes)
+
 
     return(
         <div className="p-7 pb-0">
@@ -44,7 +44,7 @@ export function Schedule({ allCinemaSchedules, currentCinemaSchedule}: CinemaSch
 
             </CardHeader>
             <CardContent>
-                <Carousel>
+                <Carousel className="">
 
                     <CarouselContent>
                         {filteredFilmsWithShowtimes.map((filmsWithShowtimes) => (

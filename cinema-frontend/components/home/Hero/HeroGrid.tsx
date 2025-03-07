@@ -3,7 +3,7 @@ import {FilmCard} from "@/components/films/FilmCard";
 import {EventCard} from "@/components/events/EventCard";
 import "@/styles/globals.css"
 import {Dialog} from "@/components/ui/dialog";
-import {DialogFulInfo} from "@/components/home/dialog/DialogFulInfo";
+import {DialogFulInfo} from "@/components/home/modal/DialogFulInfo";
 
 interface HeroGridProps {
     films: CinemaSchedule[]
