@@ -53,11 +53,11 @@ public class ScraperKinoteka extends Scraper {
                     List<LocalDateTime> dateTimes = convertToDateTimesList(showtimes, urlDate);
 
                     //Accessing individual film websites
-                    String filmUrl= programItem.selectFirst("a").attr("href");
+                    String filmUrl= programItem.selectFirst("a").attr("href").replaceAll("\\?.*","");
                     Document filmWebsite = Jsoup.connect(filmUrl).get();
 
                     //Fetching film details
-                    String title = filmWebsite.select(".p-movie-details__hero-title.text-h5").text();
+                    String title = filmWebsite.select(".p-movie-details__hero-title.text-h5").text().replaceAll(" \\|.*", "");
 
 
                     String description = filmWebsite.select("div.mce-content-body.text-body-small").text();

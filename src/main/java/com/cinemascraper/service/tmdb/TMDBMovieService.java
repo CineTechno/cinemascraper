@@ -14,6 +14,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.util.Collections.replaceAll;
+
 @Service
 public class TMDBMovieService {
     private static final String API_KEY = "b34a16eb8215ff272b37a9f1bda50e25";
@@ -32,6 +34,12 @@ public class TMDBMovieService {
     public void addRatingFromTMDB(List<String> titlesFromDB) throws IOException {
         List<TMDBMovie> movies = new ArrayList<>();
         for (String title : titlesFromDB) {
+            title=title.replaceAll(" \\|.*", "").
+                    replaceAll("ficjalna premiera: ", "").
+                    replaceAll("Pokaz specjalny: ", "").
+                    replaceAll("Pora dla Seniora: ", "").
+                    replaceAll("dubbing PL", "").
+                    replaceAll(" - wersja z polskim lektorem", "");
             String url = BASE_URL + "?api_key=" + API_KEY + "&query=" + title;
             Request request = new Request.Builder()
                     .url(url)

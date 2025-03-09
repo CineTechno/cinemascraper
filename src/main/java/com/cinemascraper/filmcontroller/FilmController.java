@@ -62,9 +62,6 @@ public class FilmController {
     @GetMapping("/muranow")
     public void getFilmDetails() {
     scraperMuranow.getFilmSchedule().forEach(filmRepository::create);
-
-
-
     }
 
     @GetMapping("/tmdb")
@@ -93,15 +90,12 @@ public class FilmController {
 
     @GetMapping("/wajda")
     public ResponseEntity scrapeWajda() {
-
        var eventList = scraperWajda.getEventSchedule();
        eventList.forEach(eventRepository::save);
        return ResponseEntity.ok(eventList);
-
     }
 
     @GetMapping("/getcinemadate")
-
     public String getFilmsFromCinema(@RequestParam String cinema,
                                      @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") String date) {
        return  filmRepository.getCinemaDateAsJson(cinema, date);

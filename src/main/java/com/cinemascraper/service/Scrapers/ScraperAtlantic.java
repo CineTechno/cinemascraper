@@ -75,7 +75,6 @@ public class ScraperAtlantic extends Scraper {
             }
 
         }
-        System.out.println(tempListOfFilms);
         return tempListOfFilms;
     }
 
@@ -93,12 +92,10 @@ public class ScraperAtlantic extends Scraper {
             String description = Objects.requireNonNull(website.selectFirst("p"))
                     .text().trim();
             Elements images = Objects.requireNonNull(website.select("img"));
-            System.out.println(images.size());
             String imgPath = null;
             if(images.size()>2){
                 imgPath=images.get(5).attr("src");
             }
-            System.out.println(imgPath);
             String director = Objects.requireNonNull(website.select("div.movie_details_panel-info dl dd:nth-of-type(1)")).text();
             String year = Objects.requireNonNull(website.select("div.movie_details_panel-info dl dd:nth-of-type(5)")).text();
             detailsMap.put("description", description);

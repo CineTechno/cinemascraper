@@ -15,15 +15,25 @@ export function Hero({ schedules, featuredEvent}: HeroProps) {
     return (
         <section className="relative">
 
-            <HeroBackground />
-            <div className="relative z-10 py-16 px-4 md:px-6 lg:px-8">
-                <HeroContent
-                    title="Polecane Filmy i Wydarzenia"
-                />
-                <HeroGrid
-                    films={schedules}
-                    featuredEvent={featuredEvent}
-                />
+            <HeroBackground/>
+            <div className="flex gap-5">
+                <div className="flex flex-col flex-1">
+                    <div className="relative py-8 px-0 md:px-6 lg:px-8 flex-col">
+                        <h2 className="text-4xl sm:text-3xl font-bold text-white pb-6">Filmy tygodnia</h2>
+                        <HeroGrid
+                            films={schedules}
+                        />
+                    </div>
+                </div>
+                <div className="flex flex-col flex-1 justify-left">
+                    <div>
+                        <p>W-warto Zobaczyc</p>
+                    </div>
+
+                    <div>
+                        <span className="text-lg text-white">Tylko dobre kina w Warszawie</span>
+                    </div>
+                </div>
             </div>
 
         </section>

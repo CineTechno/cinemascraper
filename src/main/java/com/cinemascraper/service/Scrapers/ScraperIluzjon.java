@@ -45,7 +45,7 @@ public class ScraperIluzjon extends Scraper{
                 } else if (element.is("span.hour a")) {
                     Pattern pattern = Pattern.compile("(\\d{1,2}:\\d{2}) - (.+)");
                     Matcher matcher = pattern.matcher(element.text());
-                    String filmURL = "https://www.iluzjon.fn.org.pl/" +element.attr("href");
+                    String filmURL = "https://www.iluzjon.fn.org.pl/" +element.attr("href").replaceAll("\\?.*", "");
                     Map<String,String> filmDetails = getFilmDetails(filmURL);
                     String description = filmDetails.getOrDefault("description", "");
                     String director = filmDetails.getOrDefault("director","");

@@ -6,6 +6,7 @@ export interface Film {
     year: string,
     imgPath: string,
     rating: number
+    link: string
 }
 
 export interface FilmEvent {

@@ -1,8 +1,7 @@
 import { fetchAllCinemaSchedules } from "@/lib/cinema-data";
-import ClientWrapper from "@/components/ClientWrapper";
 import {DateProvider} from "@/context/DateContext";
 import {Hero} from "@/components/home/Hero";
-import {filmEvent, films} from "@/types";
+import {filmEvent} from "@/types";
 import {Schedule} from "@/components/home/Schedule";
 
 // Revalidation timing

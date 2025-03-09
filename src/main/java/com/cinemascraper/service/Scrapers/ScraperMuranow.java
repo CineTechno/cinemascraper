@@ -77,16 +77,24 @@ public class ScraperMuranow extends Scraper {
             }
 
         }
-        System.out.println(tempListOfFilms);
         return tempListOfFilms;
     }
 
     @Override
     public Map<String,String> getFilmDetails(String title) {
         String processedTitle = normalizeText(title);
-        Map<String,String> detailsMap = new HashMap<>();
+        Map<String, String> detailsMap = new HashMap<>();
+        Document website;
+
         try {
-            Document website = Jsoup.connect("https://kinomuranow.pl/film/" + processedTitle).get();
+            website = Jsoup.connect("https://kinomuranow.pl/film/" + processedTitle).get();
+        } catch (IOException e) {
+            try {
+                website = Jsoup.connect("https://kinomuranow.pl/film/" + processedTitle + "-1").get();
+            } catch (IOException e2) {
+                return null;
+            }
+        }
             String description = Objects.requireNonNull(website.select("div.node__summary").first()).text();
             String imgPath = "https://kinomuranow.pl/" + Objects.requireNonNull(website.selectFirst("div.field__item img").attr("src"));
             String director = Objects.requireNonNull(website.select("div.field.field--name-field-movie-director div.field__items div.field__item")).text();
@@ -97,13 +105,6 @@ public class ScraperMuranow extends Scraper {
             detailsMap.put("imgPath", imgPath);
             detailsMap.put("link", "https://kinomuranow.pl/film/" + processedTitle);
             return detailsMap;
-        }catch(IOException e){
-            e.printStackTrace();
-            return null;
-        }
-
-
-
     }
 
 

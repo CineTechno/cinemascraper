@@ -6,12 +6,26 @@ import {CalendarIcon, ChevronLeft, ChevronRight} from "lucide-react"
 import { format } from "date-fns"
 import { cn } from "@/lib/utils"
 import { addDays, subDays } from 'date-fns'
+import { pl } from "date-fns/locale"
 import {useDateContext} from "@/context/DateContext";
 
 export const DateNavigation = () => {
     const {selectedDate, setSelectedDate} = useDateContext()
-    const handlePrevDay = () => setSelectedDate(subDays(selectedDate, 1))
-    const handleNextDay = () => setSelectedDate(addDays(selectedDate, 1))
+    const handlePrevDay = () => {
+        const today = new Date();
+
+        if (selectedDate.getTime() >= today.getTime()) {
+            setSelectedDate(subDays(selectedDate, 1));
+        }
+    };
+    const handleNextDay = () => {
+        const todayPlus7 = new Date();
+        todayPlus7.setDate(todayPlus7.getDate() + 5);
+
+        if (selectedDate.getTime() <= todayPlus7.getTime()) {
+            setSelectedDate(addDays(selectedDate, 1));
+        }
+    };
 
     return (
         <div className="flex items-center h-2">
@@ -36,7 +50,7 @@ export const DateNavigation = () => {
                         )}
                     >
                         <CalendarIcon></CalendarIcon>
-                        {selectedDate ? format(selectedDate, "P") : <span >Pick a selectedDate</span>}
+                        {selectedDate ? format(selectedDate, "dd/MM EEEE", {locale:pl}) : <span >Pick a selectedDate</span>}
                     </Button>
                 </PopoverTrigger>
                 <PopoverContent className="w-auto p-0 bg-white" align="end">
