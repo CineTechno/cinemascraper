@@ -208,7 +208,7 @@ const CarouselPrevious = React.forwardRef<
       className={cn(
         "absolute  h-8 w-8 rounded-full",
         orientation === "horizontal"
-          ? "-left-5 top-1/2 -translate-y-1/2"
+          ? "-left-5 top-1/2 -translate-y-1/2 z-50"
           : "-top-12 left-1/2 -translate-x-1/2 rotate-90",
         className
       )}
@@ -233,10 +233,11 @@ const CarouselNext = React.forwardRef<
     <Button
       ref={ref}
       size={size}
+      variant={variant}
       className={cn(
         "absolute h-8 w-8 rounded-full",
         orientation === "horizontal"
-          ? "-right-5 top-1/2 -translate-y-1/2"
+          ? "-right-5 top-1/2 -translate-y-1/2 z-50"
           : "-bottom-12 left-1/2 -translate-x-1/2 rotate-90",
         className
       )}
@@ -244,7 +245,7 @@ const CarouselNext = React.forwardRef<
       onClick={scrollNext}
       {...props}
     >
-      <ArrowRight className="h-4 w-4 fill-white" />
+      <ArrowRight className="h-4 w-4" />
       <span className="sr-only">Next slide</span>
     </Button>
   )

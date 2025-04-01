@@ -35,31 +35,39 @@ export function Schedule({ allCinemaSchedules, currentCinemaSchedule}: CinemaSch
        }).filter(item => item.showtimes.length>0).sort((a,b)=>b.film.rating - a.film.rating)
 
     return(
-        <div className=" overflow-visible">
+        <div className=" overflow-visible ">
             <CardHeader className="flex flex-row gap-3">
                 <CardTitle className= "translate-y-[1px] px-0" >{cinemaName}</CardTitle>
                 <DateNavigation></DateNavigation>
 
             </CardHeader>
-            <CardContent className="overflow-visible">
-                <Carousel className="overflow-visible relative">
+            <CardContent className="">
+                <Carousel className="">
                     <CarouselPrevious className="absolute"></CarouselPrevious>
-                    <CarouselNext></CarouselNext>
+                    <CarouselNext className="absolute"></CarouselNext>
 
-                    <CarouselContent className="overflow-visible">
-                        {filteredFilmsWithShowtimes.map((filmsWithShowtimes, index) => (
+                    <CarouselContent className="overflow-visible z-10 px-20">
+                        {filteredFilmsWithShowtimes.length>0? filteredFilmsWithShowtimes.map((filmsWithShowtimes, index) => {
+                            if(filmsWithShowtimes) {
+                                return(
+                                <CarouselItem key={index} className="min-h-80 min-w-60 overflow-visible">
+                                    <ScheduleCard
+                                        filmsWithShowTimes={filmsWithShowtimes}
+                                        allCinemaSchedules={allCinemaSchedules}>
 
-                            <CarouselItem key={index} className= "min-h-80 min-w-60 overflow-visible" >
-                                <ScheduleCard
-                                              filmsWithShowTimes={filmsWithShowtimes}
-                                              allCinemaSchedules={allCinemaSchedules}>
-
-                                </ScheduleCard>
-
-                            </CarouselItem>
-                        ))}
+                                    </ScheduleCard>
+                                </CarouselItem>)
+                            }else{
+                                return null
+                            }
+                        }):(
+                            <div className="p-4">
+                                <h2 className="text-lg font-medium">Dzisiaj już nic nie gra</h2>
+                            </div>
+                        )}
 
                     </CarouselContent>
+
                 </Carousel>
             </CardContent>
         </div>

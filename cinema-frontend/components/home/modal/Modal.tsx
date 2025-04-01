@@ -1,9 +1,9 @@
+'use client'
 import { createPortal } from "react-dom";
-import {CinemaSchedule, Film, films, FilmsWithShowtimes} from "@/types";
+import {Film, FilmsWithShowtimes} from "@/types";
 import Image from "next/image";
-import React from "react";
+import React, {useEffect, useState} from "react";
 import {format} from "date-fns";
-import {useSelectedDays} from "react-day-picker/src/hooks/useSelectedDays";
 import {useDateContext} from "@/context/DateContext";
 
 interface ModalProps {
@@ -20,13 +20,14 @@ interface matchingCinemaSchedules {
 
 const Modal = ({  isOpen, onOpenChange, matchingCinemaShowtimes, film }:ModalProps) => {
     const{selectedDate,setSelectedDate} = useDateContext()
-    if (isOpen) {
-        document.body.style.overflow = "hidden"; // ✅ Disable scrolling
-    } else {
-        document.body.style.overflow = "auto"; // ✅ Re-enable scrolling when modal closes
-    }
+
+
+    // Don't render anything during SSR or when modal is closed
+
+    document.body.style.overflow = isOpen ? "hidden" : "auto";
 
     if (!isOpen) return null;
+
     const groupedShowtimesByDate = matchingCinemaShowtimes.map(filmShowtimes => {
 
         const groupedShowtimes = new Map()

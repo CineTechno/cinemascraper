@@ -1,7 +1,6 @@
 import { fetchAllCinemaSchedules } from "@/lib/cinema-data";
 import {DateProvider} from "@/context/DateContext";
 import {Hero} from "@/components/home/Hero";
-import {filmEvent} from "@/types";
 import {Schedule} from "@/components/home/Schedule";
 
 // Revalidation timing
@@ -11,13 +10,13 @@ export const revalidate = 3600; // Revalidate every hour
 export default async function Page() {
     const cinemaNames = ['Kinoteka', 'Muranow', 'Atlantic', 'Iluzjon'];
     const schedules = await fetchAllCinemaSchedules(cinemaNames);
+    console.log(schedules)
 
     // Pass data to client component
     return (
         <DateProvider>
             <Hero
                 schedules={schedules}
-                featuredEvent={filmEvent}
             />
             <div className="flex-col">
                 {schedules.map(schedule => (
