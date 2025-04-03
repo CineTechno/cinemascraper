@@ -1,6 +1,7 @@
 
 import type { Metadata } from "next"
 import "../styles/globals.css";
+import Image from "next/image";
 
 export const metadata: Metadata = {
     title: "Cinema App",
@@ -13,13 +14,13 @@ export default function RootLayout({children}: {
     return (
         <html lang="en">
         <body className= "min-h-screen bg-background flex flex-col">
-        <header className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-            <div className="max-w-7xl mx-auto h-16 px-4 md:px-6 lg:px-8 flex items-center">
-                <span className=" inline-block text-3xl text-blue-800 font-bold tracking-tight">W-war</span>
-                <span className="inline-block text-3xl font-bold tracking-tight">to zobaczyć</span>
-                <span className="text-lg font-medium tracking-tight ml-auto">
-        Tylko dobre kina w Warszawie
-    </span>
+        <header>
+            <div className=" lg:mx-2 sm:mx-6 h-16 px-4 md:px-6 lg:px-8 flex items-center justify-center">
+                <div className="relative right-3 bottom-1">
+                    <Image src={"/Logo.png"} alt={"Logo"} width={30} height={30} className="fill-blue-800"/>
+                </div>
+                <span className=" inline-block text-4xl text-blue-800 font-bold tracking-tight">W-wa</span>
+                <span className="inline-block text-4xl font-bold tracking-tight">rto zobaczyć</span>
             </div>
         </header>
 

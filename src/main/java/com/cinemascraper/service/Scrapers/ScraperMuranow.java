@@ -92,9 +92,12 @@ public class ScraperMuranow extends Scraper {
             try {
                 website = Jsoup.connect("https://kinomuranow.pl/film/" + processedTitle + "-1").get();
             } catch (IOException e2) {
+                try {
+                    website = Jsoup.connect("https://kinomuranow.pl/film/" + processedTitle + "-0").get();
+                } catch(IOException e3){
                 return null;
             }
-        }
+        }}
             String description = Objects.requireNonNull(website.select("div.node__summary").first()).text();
             String imgPath = "https://kinomuranow.pl/" + Objects.requireNonNull(website.selectFirst("div.field__item img").attr("src"));
             String director = Objects.requireNonNull(website.select("div.field.field--name-field-movie-director div.field__items div.field__item")).text();

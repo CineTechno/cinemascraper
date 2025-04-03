@@ -57,7 +57,7 @@ public class FilmRepository {
         }
 
         jdbcClient.sql("INSERT INTO links (film_id, cinema_id, link) VALUES (?, ?, ?)" +
-                        "ON CONFLICT (film_id,cinema_id,link) DO NOTHING ")
+                        "ON CONFLICT (film_id,cinema_id) DO NOTHING ")
         .params(filmID, cinemaID, film.getLink())
                 .update();
     }
@@ -122,13 +122,12 @@ public class FilmRepository {
                                 "    ) FROM films f " +
                                 "    JOIN links l ON l.film_id = f.id AND l.cinema_id = c.id " +
                                 "    WHERE f.id IN (SELECT DISTINCT film_id FROM showtimes WHERE cinema_id = c.id) " +
-                                "    AND f.title IS NOT NULL " +
-                                "    AND f.description IS NOT NULL " +
-                                "    AND f.director IS NOT NULL " +
-                                "    AND f.release_year IS NOT NULL " +
-                                "    AND f.img_path IS NOT NULL " +
-                                "    AND f.rating IS NOT NULL " +
-                                "    AND l.link IS NOT NULL " +
+                                "    AND f.title IS NOT NULL AND trim(f.description) <> '' " +
+                                "    AND f.description IS NOT NULL AND trim(f.description) <> '' " +
+                                "    AND f.director IS NOT NULL AND trim(f.description) <> '' " +
+                                "    AND f.release_year IS NOT NULL AND trim(f.description) <> '' " +
+                                "    AND f.img_path IS NOT NULL AND trim(f.description) <> '' " +
+                                "    AND f.rating IS NOT NULL AND trim(f.description) <> '' " +
                                 ")" +
                                 ") AS cinema_json " +
                                 "FROM cinemas c " +
@@ -167,12 +166,16 @@ public class FilmRepository {
                                 "                  FROM showtimes " +
                                 "                  WHERE cinema_id = c.id " +
                                 "                  AND show_datetime::date = :date::date) " +
-                                "    AND f.title IS NOT NULL " +
-                                "    AND f.description IS NOT NULL " +
-                                "    AND f.director IS NOT NULL " +
-                                "    AND f.release_year IS NOT NULL " +
-                                "    AND f.img_path IS NOT NULL " +
-                                "    AND f.rating IS NOT NULL " +
+                                "    AND f.title IS NOT NULL AND <> '' " +
+                                "    AND f.description IS NOT NULL AND <> '' " +
+                                "    AND f.director IS NOT NULL AND <> '' " +
+                                "    AND f.release_year IS NOT NULL AND <> '' " +
+                                "    AND f.img_path IS NOT NULL AND <> '' " +
+                                "    AND f.rating IS NOT NULL AND <> '' " +
+                                "    AND EXISTS (SELECT 1 FROM showtimes s " +
+                                "               WHERE s.cinema_id = c.id " +
+                                "               AND s.film_id = f.id " +
+                                "               AND s.show_datetime::date = :date::date) " +
                                 ")" +
                                 ") AS cinema_json " +
                                 "FROM cinemas c " +

@@ -54,7 +54,7 @@ export function ScheduleCard({filmsWithShowTimes, allCinemaSchedules}:ScheduleCa
                     </div>
                     <div className="absolute bottom-10 text-white">
                         <span className="font-bold text-sm bg-gradient-to-t from-blue-950 to-blue-800 p-2 rounded-xl">{film.title}</span>
-                        <p className="text-xs opacity-0 group-hover:opacity-100 transition-opacity duration-300 line-clamp-4 pr-10 mt-3">
+                        <p className="text-xs md:opacity-0 md:group-hover:opacity-100 md:transition-opacity md:duration-300 line-clamp-4 pr-10 mt-3">
                             {film.description}
                         </p>
                     </div>

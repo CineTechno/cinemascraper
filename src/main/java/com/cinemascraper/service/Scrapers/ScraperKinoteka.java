@@ -57,7 +57,10 @@ public class ScraperKinoteka extends Scraper {
                     Document filmWebsite = Jsoup.connect(filmUrl).get();
 
                     //Fetching film details
-                    String title = filmWebsite.select(".p-movie-details__hero-title.text-h5").text().replaceAll(" \\|.*", "");
+                    String title = filmWebsite.select(".p-movie-details__hero-title.text-h5").text()
+                            .replaceAll("LET’S DOC \\| ", "")
+                            .replaceAll(" \\|.*", "");
+
 
 
                     String description = filmWebsite.select("div.mce-content-body.text-body-small").text();
