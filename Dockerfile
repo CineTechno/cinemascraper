@@ -15,7 +15,7 @@ RUN bash ./mvnw clean package -DskipTests
 FROM eclipse-temurin:21-jdk
 
 WORKDIR /app
-
+#just need to add for git#
 # Use exact JAR name — confirmed in your target folder
 COPY --from=builder /app/target/demo-0.0.1-SNAPSHOT.jar app.jar
 
