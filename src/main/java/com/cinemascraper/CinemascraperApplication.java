@@ -10,7 +10,19 @@ import org.springframework.context.annotation.Bean;
 public class CinemascraperApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(CinemascraperApplication.class, args);
+
+
+			System.out.println("ENVIRONMENT VARIABLES:");
+			System.getenv().forEach((key, value) -> {
+				if (key.contains("DATASOURCE") && !key.contains("PASSWORD")) {
+					System.out.println(key + "=" + value);
+				} else if (key.contains("PASSWORD")) {
+					System.out.println(key + "=*****");
+				}
+			});
+
+
+			SpringApplication.run(CinemascraperApplication.class, args);
 	}
 
 
