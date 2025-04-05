@@ -7,11 +7,7 @@ interface getAllSchedulesReturn{
     error:string
 }
 
-export function getStaticProps(){
-    try{
 
-    }
-}
 
 export function UseGetAllSchedule(cinemaNames:string[]):getAllSchedulesReturn{
     const [schedules, setSchedules] = useState<CinemaSchedule[]>([]);
