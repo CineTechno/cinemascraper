@@ -1,9 +1,9 @@
+
 'use client'
 import {useDateContext} from "@/context/DateContext";
-import {CinemaSchedule, cinemaSchedules, Film} from "@/types";
-import {useState} from "react";
+import {CinemaSchedule, Film} from "@/types";
 import {format} from "date-fns"
-import {Card, CardContent, CardHeader, CardTitle} from "@/components/ui/card";
+import {CardContent, CardHeader, CardTitle} from "@/components/ui/card";
 import {Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious} from "@/components/ui/carousel";
 import {ScheduleCard} from "@/components/home/Schedule/schedule-card";
 import {DateNavigation} from "@/components/home/Schedule/date-navigation";
@@ -17,8 +17,10 @@ interface CinemaScheduleProps {
 
 export function Schedule({ allCinemaSchedules, currentCinemaSchedule}: CinemaScheduleProps) {
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const {id,cinemaName,filmsWithShowtimes} = currentCinemaSchedule;
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const{selectedDate,setSelectedDate} = useDateContext()
     const selectedDateToString = format(selectedDate, "yyyy-MM-dd")
 

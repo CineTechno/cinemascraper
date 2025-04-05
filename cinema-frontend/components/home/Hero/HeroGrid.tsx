@@ -1,4 +1,4 @@
-import type {CinemaSchedule, Film, FilmEvent, FilmsWithShowtimes} from "@/types"
+import type {CinemaSchedule, FilmsWithShowtimes} from "@/types"
 import "@/styles/globals.css"
 import {ScheduleCard} from "@/components/home/Schedule/schedule-card";
 

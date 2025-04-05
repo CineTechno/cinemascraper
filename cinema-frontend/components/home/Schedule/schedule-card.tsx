@@ -1,10 +1,8 @@
 'use client'
 import type {CinemaSchedule, FilmsWithShowtimes} from "@/types"
 import { Card, CardContent } from "@/components/ui/card"
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import Image from "next/image"
 import {useState} from "react";
-import {format} from "date-fns";
 import Modal from "@/components/home/modal/Modal";
 import {Star} from "lucide-react";
 
@@ -23,6 +21,7 @@ interface matchingCinemaShowtimes {
 
 export function ScheduleCard({filmsWithShowTimes, allCinemaSchedules}:ScheduleCardProps ) {
     const [isOpen, setIsOpen] = useState(false)
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { film, showtimes } = filmsWithShowTimes;
 
     const matchingCinemaShowtimes:matchingCinemaShowtimes[] = [];

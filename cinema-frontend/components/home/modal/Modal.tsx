@@ -2,7 +2,7 @@
 import { createPortal } from "react-dom";
 import {Film, FilmsWithShowtimes} from "@/types";
 import Image from "next/image";
-import React, {useEffect, useState} from "react";
+import React from "react";
 import {format} from "date-fns";
 import {useDateContext} from "@/context/DateContext";
 
@@ -19,6 +19,7 @@ interface matchingCinemaSchedules {
 }
 
 const Modal = ({  isOpen, onOpenChange, matchingCinemaShowtimes, film }:ModalProps) => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const{selectedDate,setSelectedDate} = useDateContext()
 
 
@@ -61,6 +62,7 @@ const Modal = ({  isOpen, onOpenChange, matchingCinemaShowtimes, film }:ModalPro
 
 
 
+    // @ts-ignore
     return createPortal(
         <div
             className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 p-4 z-50"

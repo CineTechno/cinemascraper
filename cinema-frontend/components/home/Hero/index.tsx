@@ -1,17 +1,12 @@
-import {HeroGrid} from "@/components/home/Hero/HeroGrid";
+
 import {HeroBackground} from "@/components/home/Hero/HeroBackground";
-import {HeroContent} from "@/components/home/Hero/HeroContent";
-import {CinemaSchedule, Film, FilmEvent} from "@/types";
 
 
-interface HeroProps {
-    schedules: CinemaSchedule[]
-    featuredEvent: FilmEvent
-    selectedDate:Date
-}
 
 
-export function Hero({ schedules, featuredEvent}: HeroProps) {
+
+
+export function Hero() {
     return (
         <section className="relative">
 

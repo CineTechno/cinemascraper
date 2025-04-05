@@ -1,4 +1,4 @@
-import CinemaBackground from "@/components/home/Hero/CinemaBackground";
+
 
 export function HeroBackground() {
     return (
