@@ -16,7 +16,6 @@ export default async function Page() {
     return (
         <DateProvider>
             <Hero
-                schedules={schedules}
             />
             <div className="flex-col">
                 {schedules.map(schedule => (
