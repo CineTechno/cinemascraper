@@ -15,18 +15,25 @@ public class DataSourceConfig {
         // Get values from environment variables
         String username = System.getenv("PGUSER");
         String password = System.getenv("PGPASSWORD");
-        String host = System.getenv("PGHOST");
-        String port = System.getenv("PGPORT");
-        String database = System.getenv("PGDATABASE");
 
-        // Set defaults for any missing values
-        if (host == null) host = "postgres.railway.internal";
-        if (port == null) port = "5432";
-        if (database == null) database = "railway";
+        // If those aren't available, try other environment variables
+        if (username == null) username = System.getenv("POSTGRES_USER");
+        if (password == null) password = System.getenv("POSTGRES_PASSWORD");
+
+        // Print debug info (omit actual password in logs)
+        System.out.println("Database username: " + username);
+        System.out.println("Database password provided: " + (password != null && !password.isEmpty()));
+
+        String host = System.getenv("PGHOST") != null ? System.getenv("PGHOST") : "postgres.railway.internal";
+        String port = System.getenv("PGPORT") != null ? System.getenv("PGPORT") : "5432";
+        String database = System.getenv("PGDATABASE") != null ? System.getenv("PGDATABASE") : "railway";
 
         String jdbcUrl = String.format("jdbc:postgresql://%s:%s/%s", host, port, database);
+        System.out.println("JDBC URL: " + jdbcUrl);
 
+        // Make sure we're explicitly setting username and password
         return DataSourceBuilder.create()
+                .driverClassName("org.postgresql.Driver")
                 .url(jdbcUrl)
                 .username(username)
                 .password(password)
