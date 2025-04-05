@@ -12,15 +12,7 @@ public class CinemascraperApplication {
 	public static void main(String[] args) {
 
 
-			System.out.println("ENVIRONMENT VARIABLES:");
-			System.getenv().forEach((key, value) -> {
-				if (key.contains("DATASOURCE") && !key.contains("PASSWORD")) {
-					System.out.println(key + "=" + value);
-				} else if (key.contains("PASSWORD")) {
-					System.out.println(key + "=*****");
-				}
-			});
-
+		System.out.println("DATABASE_URL received: " + System.getenv("DATABASE_URL"));
 
 			SpringApplication.run(CinemascraperApplication.class, args);
 	}
