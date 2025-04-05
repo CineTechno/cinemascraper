@@ -1,7 +1,10 @@
+export const dynamic = 'force-dynamic';
+
 import { fetchAllCinemaSchedules } from "@/lib/cinema-data";
 import {DateProvider} from "@/context/DateContext";
 import {Hero} from "@/components/home/Hero";
 import {Schedule} from "@/components/home/Schedule";
+
 
 // Revalidation timing
 export const revalidate = 3600; // Revalidate every hour
