@@ -118,7 +118,7 @@ const Modal = ({  isOpen, onOpenChange, matchingCinemaShowtimes, film }:ModalPro
                                             {cinema.showtimes.map((dateGroup, dateIndex) => (
                                                 <li key={dateIndex} className="mb-3">
                                                     <div className="flex flex-wrap gap-2 mt-1">
-                                                        {dateGroup.hours.map((hour, hourIndex) => (
+                                                        {dateGroup.hours.map((hour:string, hourIndex:number) => (
                                                             <span key={hourIndex} className="bg-blue-900 px-2 py-1 rounded-md text-xs">
                                         {hour}
                                     </span>
