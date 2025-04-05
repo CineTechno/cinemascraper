@@ -106,6 +106,10 @@ public class FilmController {
         return filmRepository.getCinemaAsJson(cinema);
     }
 
+    @GetMapping("/test")
+        public ResponseEntity test() {
+        return ResponseEntity.ok("worked");
+        }
 
 
 }
