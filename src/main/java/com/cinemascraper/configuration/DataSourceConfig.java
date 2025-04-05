@@ -12,12 +12,17 @@ public class DataSourceConfig {
     @Bean
     @Primary
     public DataSource dataSource() {
-        // Manually extract components from the URL
-        String username = "postgres";
-        String password = "UiZHJmwwnLCeaXaGzxCDrRxxpOlIkJxz";
-        String host = "postgres.railway.internal";
-        String port = "5432";
-        String database = "railway";
+        // Get values from environment variables
+        String username = System.getenv("PGUSER");
+        String password = System.getenv("PGPASSWORD");
+        String host = System.getenv("PGHOST");
+        String port = System.getenv("PGPORT");
+        String database = System.getenv("PGDATABASE");
+
+        // Set defaults for any missing values
+        if (host == null) host = "postgres.railway.internal";
+        if (port == null) port = "5432";
+        if (database == null) database = "railway";
 
         String jdbcUrl = String.format("jdbc:postgresql://%s:%s/%s", host, port, database);
 
