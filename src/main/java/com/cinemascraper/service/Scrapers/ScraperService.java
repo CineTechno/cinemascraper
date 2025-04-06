@@ -40,7 +40,13 @@ public class ScraperService {
         Collections.addAll(listOfScrapers, scraperMuranow, scraperAtlantic, scraperIluzjon, scraperKinoteka);
 
         try{
-            listOfScrapers.forEach(scraper ->  scraper.getFilmSchedule().forEach(filmRepository::create));
+            listOfScrapers.forEach(scraper -> {
+                try {
+                    scraper.getFilmSchedule().forEach(filmRepository::create);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            });
         } catch (Exception e) {
             logger.error("Error while scraping films: ", e);
             return ResponseEntity.status(500).body("Scraping failed: " + e.getMessage());
