@@ -47,7 +47,7 @@ public class ScraperKinoteka extends Scraper {
     private SSLSocketFactory getKinotekaSSLSocketFactory() throws Exception {
         CertificateFactory cf = CertificateFactory.getInstance("X.509");
         Certificate cert = cf.generateCertificate(
-                getClass().getResourceAsStream("/_.kinoteka.pl.crt") // or your cert path
+                getClass().getResourceAsStream("/_.kinoteka.pl") // or your cert path
         );
 
         KeyStore ks = KeyStore.getInstance(KeyStore.getDefaultType());
