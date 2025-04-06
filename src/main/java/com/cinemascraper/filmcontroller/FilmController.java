@@ -107,8 +107,8 @@ public class FilmController {
     }
 
     @GetMapping("/test")
-        public ResponseEntity test() {
-        return ResponseEntity.ok("worked");
+        public String test() {
+        return filmRepository.testing();
         }
 
 

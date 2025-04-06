@@ -186,6 +186,12 @@ public class FilmRepository {
                 .query(String.class)
                 .single();
     }
+
+    public String testing() {
+        return jdbcClient.sql("SELECT title FROM films WHERE title = 'Noc na Ziemi'")
+                .query(String.class) // ✅ correct way to specify result type
+                .single();           // ✅ make sure to call this as a method
+    }
 }
 
 
