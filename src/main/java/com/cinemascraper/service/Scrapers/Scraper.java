@@ -25,7 +25,7 @@ public abstract class Scraper {
 
     }
 
-        public List<FilmModel> getFilmSchedule (){
+        public List<FilmModel> getFilmSchedule () throws Exception {
         return tempListOfFilms;
         };
 

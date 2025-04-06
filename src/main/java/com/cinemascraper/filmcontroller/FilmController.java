@@ -84,7 +84,7 @@ public class FilmController {
     }
 
     @GetMapping("/kinoteka")
-    public List<FilmModel> scrapeKinoteka() {
+    public List<FilmModel> scrapeKinoteka() throws Exception {
         return scraperKinoteka.getFilmSchedule();
     }
 

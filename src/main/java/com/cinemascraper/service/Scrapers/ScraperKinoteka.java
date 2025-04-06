@@ -2,6 +2,7 @@ package com.cinemascraper.service.Scrapers;
 
 import com.cinemascraper.model.FilmModel;
 import com.cinemascraper.utils.DateParser;
+import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManagerFactory;
 import javax.swing.text.DateFormatter;
 import java.io.IOException;
@@ -41,37 +43,41 @@ public class ScraperKinoteka extends Scraper {
     ) {
         super(dateSelector, titleSelector, url, showTimeSelector);
     }
-    private Document connectWithCustomCert(String url) throws Exception {
-        // Load cert from resources
+
+    private SSLSocketFactory getKinotekaSSLSocketFactory() throws Exception {
         CertificateFactory cf = CertificateFactory.getInstance("X.509");
-        Certificate cert = cf.generateCertificate(getClass().getResourceAsStream("/_.kinoteka.pl"));
+        Certificate cert = cf.generateCertificate(
+                getClass().getResourceAsStream("/_.kinoteka.pl.crt") // or your cert path
+        );
+
         KeyStore ks = KeyStore.getInstance(KeyStore.getDefaultType());
-        ks.load(null, null); // create empty keystore
+        ks.load(null, null);
         ks.setCertificateEntry("kinoteka", cert);
 
-        TrustManagerFactory tmf = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
+        TrustManagerFactory tmf = TrustManagerFactory.getInstance(
+                TrustManagerFactory.getDefaultAlgorithm()
+        );
         tmf.init(ks);
 
         SSLContext sslContext = SSLContext.getInstance("TLS");
         sslContext.init(null, tmf.getTrustManagers(), new SecureRandom());
 
-        HttpsURLConnection.setDefaultSSLSocketFactory(sslContext.getSocketFactory());
-
-        return Jsoup.connect(url)
-                .userAgent("Mozilla/5.0") // optional but good practice
-                .timeout(10_000)
-                .get();
+        return sslContext.getSocketFactory();
     }
 
     @Override
-    public List<FilmModel> getFilmSchedule() {
+    public List<FilmModel> getFilmSchedule() throws Exception {
         List<FilmModel> filmSchedule = new ArrayList<>();
-
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        SSLSocketFactory sslFactory = getKinotekaSSLSocketFactory();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         try {
             for(int i =0;i<7;i++){
                 String urlDate = LocalDate.now().plusDays(i).format(formatter);
-                Document doc = connectWithCustomCert("https://kinoteka.pl/repertuar/?date=" + urlDate);
+                Connection kinotekaConnection = Jsoup.connect("https://kinoteka.pl/repertuar?date=" + urlDate)
+                        .sslSocketFactory(sslFactory)
+                        .userAgent("Mozilla/5.0")
+                        .timeout(10_000);
+                Document doc = kinotekaConnection.get();
                 Elements programItems = doc.select(".e-movie");
                 for(Element programItem : programItems){
 
@@ -82,7 +88,11 @@ public class ScraperKinoteka extends Scraper {
 
                     //Accessing individual film websites
                     String filmUrl= programItem.selectFirst("a").attr("href").replaceAll("\\?.*","");
-                    Document filmWebsite = connectWithCustomCert(filmUrl);
+                    Document filmWebsite = Jsoup.connect(filmUrl)
+                            .sslSocketFactory(sslFactory)
+                            .userAgent("Mozilla/5.0")
+                            .timeout(10_000)
+                            .get();
 
                     //Fetching film details
                     String title = filmWebsite.select(".p-movie-details__hero-title.text-h5").text()
