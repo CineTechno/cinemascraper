@@ -11,8 +11,15 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManagerFactory;
 import javax.swing.text.DateFormatter;
 import java.io.IOException;
+import java.security.KeyStore;
+import java.security.SecureRandom;
+import java.security.cert.Certificate;
+import java.security.cert.CertificateFactory;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -34,6 +41,27 @@ public class ScraperKinoteka extends Scraper {
     ) {
         super(dateSelector, titleSelector, url, showTimeSelector);
     }
+    private Document connectWithCustomCert(String url) throws Exception {
+        // Load cert from resources
+        CertificateFactory cf = CertificateFactory.getInstance("X.509");
+        Certificate cert = cf.generateCertificate(getClass().getResourceAsStream("/_.kinoteka.pl"));
+        KeyStore ks = KeyStore.getInstance(KeyStore.getDefaultType());
+        ks.load(null, null); // create empty keystore
+        ks.setCertificateEntry("kinoteka", cert);
+
+        TrustManagerFactory tmf = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
+        tmf.init(ks);
+
+        SSLContext sslContext = SSLContext.getInstance("TLS");
+        sslContext.init(null, tmf.getTrustManagers(), new SecureRandom());
+
+        HttpsURLConnection.setDefaultSSLSocketFactory(sslContext.getSocketFactory());
+
+        return Jsoup.connect(url)
+                .userAgent("Mozilla/5.0") // optional but good practice
+                .timeout(10_000)
+                .get();
+    }
 
     @Override
     public List<FilmModel> getFilmSchedule() {
@@ -43,7 +71,7 @@ public class ScraperKinoteka extends Scraper {
         try {
             for(int i =0;i<7;i++){
                 String urlDate = LocalDate.now().plusDays(i).format(formatter);
-                Document doc = Jsoup.connect("https://kinoteka.pl/repertuar/?date="+urlDate).get();
+                Document doc = connectWithCustomCert("https://kinoteka.pl/repertuar/?date=" + urlDate);
                 Elements programItems = doc.select(".e-movie");
                 for(Element programItem : programItems){
 
@@ -54,7 +82,7 @@ public class ScraperKinoteka extends Scraper {
 
                     //Accessing individual film websites
                     String filmUrl= programItem.selectFirst("a").attr("href").replaceAll("\\?.*","");
-                    Document filmWebsite = Jsoup.connect(filmUrl).get();
+                    Document filmWebsite = connectWithCustomCert(filmUrl);
 
                     //Fetching film details
                     String title = filmWebsite.select(".p-movie-details__hero-title.text-h5").text()
@@ -83,6 +111,8 @@ public class ScraperKinoteka extends Scraper {
 
         } catch (IOException e) {
             logger.error("Error fetching Kinoteka schedule: {}", e.getMessage());
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
         return filmSchedule;
     }
